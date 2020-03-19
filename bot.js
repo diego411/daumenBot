@@ -97,7 +97,7 @@ client.on(`chat`, (channel, tags, message, self) => {
 
 client.on(`chat`, (channel, tags, message, self) => {
     if(self) return;
-    if(message === 'TriHard') {
+    if(message === 'TriHard'&&cd.fire()) {
         if(i%2==0)client.say(channel, `TriHard`)
         else client.say(channel, `TriHard 7`)
     }
@@ -117,7 +117,8 @@ client.on(`chat`, async (channel, user, message, self) => {
             client.say(channel,"added " +tmp[1]+" to channels");
             client.say(channel,"/follow "+tmp[1]);
         }
-        }
+    }
+        let tmp = message.split(" ");
         if(tmp[0].slice(1,tmp[0].length)==="part"){
             let name = tmp[1];
             let s = fs.readFileSync(channelsFile).toString();
@@ -136,38 +137,38 @@ client.on(`chat`, async (channel, tags, message, self) => {
     if(self) return;
     if(isCommand(message)&&pyramidcd.fire()) {
     let tmp = message.split(" ");
-    if(tmp[0].slice(1,tmp[0].length)==="pyramid"&&(client.userstate[channel].badges.vip==="1"||client.userstate[channel].mod)){
-        if(message.Includes('AYAYA')) {
+    if(tmp[0].slice(1,tmp[0].length)==="pyramid"&&(client.userstate[channel].mod)){
+        if(message.includes('AYAYA')) {
             client.say(channel, '🔫 NaM - weeb emote detected')
         }
-        else if(message.Includes('hoSway')){
+        else if(message.includes('hoSway')){
             client.say(channel, '🔫 NaM - weeb emote detected')
         }
-        else if(message.Includes('KonCha')){
+        else if(message.includes('KonCha')){
             client.say(channel, '🔫 NaM - weeb emote detected')
         }
-        else if(message.Includes('PunOko')){
+        else if(message.includes('PunOko')){
             client.say(channel, '🔫 NaM - weeb emote detected')
         }
-        else if(message.Includes('TearGlove')){
+        else if(message.includes('TearGlove')){
             client.say(channel, '🔫 NaM - weeb emote detected')
         }
-        else if(message.Includes('TehePelo')){
+        else if(message.includes('TehePelo')){
             client.say(channel, '🔫 NaM - weeb emote detected')
         }
-        else if(message.Includes('TPcrunchyroll')){
+        else if(message.includes('TPcrunchyroll')){
             client.say(channel, '🔫 NaM - weeb emote detected')
         }
-        else if(message.Includes('TPFufun')){
+        else if(message.includes('TPFufun')){
             client.say(channel, '🔫 NaM - weeb emote detected')
         }
-        else if(message.Includes('shimizuPeace')){
+        else if(message.includes('shimizuPeace')){
             client.say(channel, '🔫 NaM - weeb emote detected')
         }
-        else if(message.Includes('tsukkiLaugh')){
+        else if(message.includes('tsukkiLaugh')){
             client.say(channel, '🔫 NaM - weeb emote detected')
         }
-        else if(message.Includes('WebPepeSmash')){
+        else if(message.includes('WebPepeSmash')){
         let emote2 = 'peepoWeebSmash'
         let n = tmp[2];
         let max = 10; let min = 5;
