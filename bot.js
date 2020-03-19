@@ -1,6 +1,5 @@
 const tmi = require('tmi.js');
 const cooldown = require('cooldown');
-const restart = require('restart');
 
 const fs = require('fs');
 const channelsFile = './db/channels.txt';
@@ -106,7 +105,7 @@ client.on(`chat`, (channel, tags, message, self) => {
 
 client.on(`chat`, async (channel, user, message, self) => {
     if(self) return;
-    if(user['user-id'] != '150819483'&&user['124776535']) {
+    if(user['user-id'] != '150819483'&&user['user-id'] != '124776535') {
         if(message.startsWith('!join'))
         console.log(user, message);
     }
