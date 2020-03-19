@@ -106,16 +106,15 @@ client.on(`chat`, (channel, tags, message, self) => {
 
 client.on(`chat`, async (channel, user, message, self) => {
     if(self) return;
-    if(user['user-id'] != '151035078') {
-    if(message.startsWith('!join-save')) {
-    console.log(user, message)
-     }
+    if(user['user-id'] != '150819483') {
+        if(message.startsWith('!join'))
+        console.log(user, message);
     }
     else {
     if(isCommand(message)&&cd.fire()) {
         let tmp = message.split(" ");
         if(tmp[0].slice(1,tmp[0].length)==="join"){
-            fs.appendFileSync(channelsFile, ' ' + tmp[1]); 
+            fs.appendFileSync(channelsFile, ' "' + tmp[1]+ '"'); 
             client.say(channel,"added " +tmp[1]+" to channels");
             client.say(channel,"/follow "+tmp[1]);
         }
