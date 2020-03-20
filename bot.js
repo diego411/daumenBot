@@ -1,7 +1,11 @@
 const tmi = require('tmi.js');
 const cooldown = require('cooldown');
-
 const fs = require('fs');
+let f = fs.readFileSync('./db/channels.txt').toString();
+let names = f.split(" ");
+names[1] = "ii_dee";
+names[2] = "ninr"
+
 const channelsFile = './db/channels.txt';
 const channelOptions = fs.readFileSync(channelsFile).toString().split('"').filter(
     function(i){return i != null;}).join('').split(' ')
@@ -89,17 +93,27 @@ client.on('chat', (channel, user, message, self) => {
 client.on(`chat`, (channel, tags, message, self) => {
     if(self) return;
     if(message === 'play roblox'&&cd.fire()) {
-    if(i%2==0)client.say(channel, `FeelsWeirdManW 🤚 ${tags.username}`)
-        else client.say(channel, `FeelsWeirdManW 🤚 ${tags.username}⠀`)
+    if(i%2==0)client.say(names[2], `FeelsWeirdManW 🤚 ${tags.username}`)
+        if (client.userstate[channel].mod) {
+            return;
+        }
+        else {
+            client.say(names[2], `FeelsWeirdManW 🤚 ${tags.username}⠀`)
         i++;
+        }
     }
 });
 
-client.on(`chat`, (channel, tags, message, self) => {
+client.on(`chat`, (channel, user, message, self) => {
     if(self) return;
+    if(user['user-id'] === '409556357') {
+        return;
+    }
+    else {
     if(message === 'TriHard'&&cd.fire()) {
         if(i%2==0)client.say(channel, `TriHard`)
         else client.say(channel, `TriHard 7`)
+        }
     }
 });
 
@@ -108,6 +122,12 @@ client.on(`chat`, async (channel, user, message, self) => {
     if(user['user-id'] != '150819483'&&user['user-id'] != '124776535') {
         if(message.startsWith('!join'))
         console.log(user, message);
+        if(message.includes('lac')&&cd.fire()) {
+            client.say(names[1], `FeelsWeirdMan`)
+        if(message.startsWith('*help')&&cd.fire()) {
+            client.say(channel, "My commands are 'widepeepoHappy', 'TriHard', 'TriAlien', 'PogU', 'cringe'")
+            }
+        }
     }
     else {
     if(isCommand(message)&&cd.fire()) {
@@ -142,7 +162,7 @@ client.on(`chat`, async (channel, tags, message, self) => {
             client.say(channel, '🔫 NaM - weeb emote detected')
         }
         else if(message.includes('hoSway')){
-            client.say(channel, '🔫 NaM - weeb emote detected')
+            client.say(channel, "🔫 NaM - weeb emote detected, she's 13 FeelsWeirdMan")
         }
         else if(message.includes('KonCha')){
             client.say(channel, '🔫 NaM - weeb emote detected')
@@ -174,13 +194,14 @@ client.on(`chat`, async (channel, tags, message, self) => {
         let max = 10; let min = 5;
         if(n<=max&&n>=min){
             for(let k=0;k<=n;k++){
-                client.say(channel, stackEmote(k,emote2));
+                client.say(channel, stackEmote2(k,emote2));
             }
             for(let k=n-1;k>0;k--){
-                client.say(channel,stackEmote(k,emote2));
+                client.say(channel,stackEmote2(k,emote2));
                 }
             }
         }
+        else {
         let emote = tmp[1];
         let n = tmp[2];
         let max = 20; let min = 5;
@@ -190,11 +211,13 @@ client.on(`chat`, async (channel, tags, message, self) => {
             }
             for(let k=n-1;k>0;k--){
                 client.say(channel,stackEmote(k,emote));
+                
+                            }
+                        }
+                    }
                 }
-            }
-        }
-    }
-});
+            } 
+        });
 
 function isCommand(m){
     if(m.charAt(0)==='!') return true;
@@ -205,6 +228,14 @@ function stackEmote(n,emote){
     let s = "";
     for(let i=0;i<n;i++){
         s = s.concat(" "+emote);
+    }
+    return s;
+}
+
+function stackEmote2(n,emote2){
+    let s = "";
+    for(let i=0;i<n;i++){
+        s = s.concat(" "+emote2);
     }
     return s;
 }
