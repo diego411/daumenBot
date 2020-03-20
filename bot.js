@@ -74,6 +74,13 @@ client.on(`chat`, (channel, tags, message, self) => {
 
 client.on(`chat`, (channel, tags, message, self) => {
     if(self) return;
+    if(message === '!test') {
+    client.say(channel, `${tags.username}, dank`)
+    }
+});
+
+client.on(`chat`, (channel, tags, message, self) => {
+    if(self) return;
     if(message === 'cringe'&&cd.fire()) {
     if(i%2==0)client.say(channel, `${tags.username} LUL BWAHAHAHAHHAHAHAHAHHAHAHA`)
         else client.say(channel, `${tags.username} LUL BWAHAHAHAHHAHAHAHAHHAHAHA⠀`)
