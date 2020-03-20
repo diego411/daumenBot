@@ -47,12 +47,16 @@ client.on(`chat`, (channel, user, message, self) => {
 })
 
 client.on(`chat`, (channel, user, message, self) => {
+    if(user['user-id'] != '150819483'&&user['user-id'] != '124776535') {
+        return;
+    } else {
         if (message === '!restart') {
-            if(user['user-id'] != '150819483'&&user['user-id'] != '124776535') return;
-            client.say(channel, 'restarting').then(() => {
+            client.say(channel, 'Restarting').then(() => {
             process.exit(1);
-          })
-          };
+           
+            })
+        };    
+    };
 });
 
 client.on('chat', (channel, tags, message, self, user, username) => {
