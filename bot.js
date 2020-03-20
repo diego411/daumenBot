@@ -4,7 +4,7 @@ const fs = require('fs');
 let f = fs.readFileSync('./db/channels.txt').toString();
 let names = f.split(" ");
 names[1] = "ii_dee";
-names[2] = "ninr" //??????????????????????
+names[2] = "ninr"
 
 const channelsFile = './db/channels.txt';
 const channelOptions = fs.readFileSync(channelsFile).toString().split('"').filter(
