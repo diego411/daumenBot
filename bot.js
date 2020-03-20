@@ -46,21 +46,6 @@ client.on(`chat`, (channel, user, message, self) => {
     }
 })
 
-client.on(`chat`, (channel, user, message, self) => {
-    if(user['user-id'] != '150819483'&&user['user-id'] != '124776535') {
-        return;
-    } 
-    else {
-        if (message === '!restart') {
-            console.log("yo");
-            client.say(channel, 'Restarting').then(() => {
-            process.exit(1);
-           
-            })
-        };    
-    };
-});
-
 client.on('chat', (channel, tags, message, self, user, username) => {
     if(self) return;
     if(tags.username=="xzn1"&&cd.fire()){
@@ -223,18 +208,7 @@ client.on(`chat`, async (channel, tags, message, self) => {
                 }
             }
         }
-    } 
-    if(tmp[0].slice(1,tmp[0].length)==="restart"){
-        if(user['user-id'] != '150819483'&&user['user-id'] != '124776535') {
-            return;
-        } 
-        else {
-            console.log("yo");
-            client.say(channel, 'Restarting').then(() => {
-            process.exit(1); })
-        }    
-    }
-    
+    }  
 });
 
 function isCommand(m){
