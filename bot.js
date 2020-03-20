@@ -4,7 +4,7 @@ const fs = require('fs');
 let f = fs.readFileSync('./db/channels.txt').toString();
 let names = f.split(" ");
 names[1] = "ii_dee";
-names[2] = "ninr"
+names[2] = "ninr" //??????????????????????
 
 const channelsFile = './db/channels.txt';
 const channelOptions = fs.readFileSync(channelsFile).toString().split('"').filter(
@@ -49,7 +49,8 @@ client.on(`chat`, (channel, user, message, self) => {
 client.on(`chat`, (channel, user, message, self) => {
     if(user['user-id'] != '150819483'&&user['user-id'] != '124776535') {
         return;
-    } else {
+    } 
+    else {
         if (message === '!restart') {
             console.log("yo");
             client.say(channel, 'Restarting').then(() => {
@@ -226,10 +227,21 @@ client.on(`chat`, async (channel, tags, message, self) => {
                     for(let k=n-1;k>0;k--){
                         client.say(channel,stackEmote(k,emote)); 
                     }
+                }
             }
         }
+    } 
+    if(tmp[0].slice(1,tmp[0].length)==="restart"){
+        if(user['user-id'] != '150819483'&&user['user-id'] != '124776535') {
+            return;
+        } 
+        else {
+            console.log("yo");
+            client.say(channel, 'Restarting').then(() => {
+            process.exit(1); })
+        }    
     }
-            } 
+    
 });
 
 function isCommand(m){
