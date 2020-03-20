@@ -109,20 +109,18 @@ client.on(`chat`, (channel, tags, message, self) => {
     if(self) return;
     if(message === 'play roblox'&&cd.fire()) {
     if(i%2==0)client.say(names[2], `FeelsWeirdManW 🤚 ${tags.username}`)
-        else {
             client.say(names[2], `FeelsWeirdManW 🤚 ${tags.username}⠀`)
-            i++;
-        }   //???????????????????????????????
+        i++;
     }
 });
 
 client.on(`chat`, (channel, user, message, self) => {
     if(self) return;
     else {
-        if(message === 'TriHard'&&cd.fire()) {
-            if(i%2==0)client.say(channel, `TriHard`)
-            else client.say(channel, `TriHard 7`)
-            i++;
+    if(message === 'TriHard'&&cd.fire()) {
+        if(i%2==0)client.say(channel, `TriHard`)
+        else client.say(channel, `TriHard 7`)
+        i++;
         }
     }
 });
@@ -160,8 +158,8 @@ client.on(`chat`, async (channel, user, message, self) => {
             }
             fs.writeFileSync(channelsFile,s.toString());
         }
-        }
-    });
+    }
+});
 
 client.on(`chat`, async (channel, tags, message, self) => {   
     if(self) return;
