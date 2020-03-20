@@ -109,25 +109,20 @@ client.on(`chat`, (channel, tags, message, self) => {
     if(self) return;
     if(message === 'play roblox'&&cd.fire()) {
     if(i%2==0)client.say(names[2], `FeelsWeirdManW 🤚 ${tags.username}`)
-        if (client.userstate[channel].mod) {
-            return;
-        }
         else {
             client.say(names[2], `FeelsWeirdManW 🤚 ${tags.username}⠀`)
-        i++;
-        }
+            i++;
+        }   //???????????????????????????????
     }
 });
 
 client.on(`chat`, (channel, user, message, self) => {
     if(self) return;
-    if(user['user-id'] === '409556357') {
-        return;
-    }
     else {
-    if(message === 'TriHard'&&cd.fire()) {
-        if(i%2==0)client.say(channel, `TriHard`)
-        else client.say(channel, `TriHard 7`)
+        if(message === 'TriHard'&&cd.fire()) {
+            if(i%2==0)client.say(channel, `TriHard`)
+            else client.say(channel, `TriHard 7`)
+            i++;
         }
     }
 });
