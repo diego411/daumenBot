@@ -126,7 +126,7 @@ client.on(`chat`, async (channel, user, message, self) => {
     if(isCommand(message)&&cd.fire()) {
         let tmp = message.split(" ");
         if(tmp[0].slice(1,tmp[0].length)==="join"){
-            fs.appendFileSync(channelsFile, ' "' + tmp[1]+ '"'); 
+            fs.appendFileSync(channelsFile, " "+tmp[1]); 
             client.say(channel,"added " +tmp[1]+" to channels");
             client.say(channel,"/follow "+tmp[1]);
         }
@@ -207,6 +207,10 @@ client.on(`chat`, async (channel, tags, message, self) => {
                     }
                 }
             }
+        }
+        if(tmp[0].slice(1,tmp[0].length)==="test"){
+            client.say(channel,"test");
+            console.log("test");
         }
     }  
 });
