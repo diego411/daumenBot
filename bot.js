@@ -12,7 +12,7 @@ const channelOptions = fs.readFileSync(channelsFile).toString().split('"').filte
 
 
 const cd = new cooldown(2000);
-const pyramidcd = new cooldown(15000)
+const pyramidcd = new cooldown(15000);
 
 const prefix = "!";
 
