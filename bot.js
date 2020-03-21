@@ -63,15 +63,6 @@ client.on(`chat`, (channel, user, message, self) => {
     }
 })
 
-client.on(`chat`, (channel, tags, message, self) => {
-    if(self) return;
-    if(message === 'PogU'&&cd.fire()) {
-    if(i%2==0)client.say(channel, `${tags.username}, PagChomp Clap`)
-        else client.say(channel, `${tags.username}, PagChomp Clap` + " " + "⠀")
-        i++;
-    }
-});
-
 client.on(`chat`, (channel, user, message, self) => {
     if (message === '!restart') {
         if(user['user-id'] != '150819483'&&user['user-id'] != '124776535') return;
@@ -136,7 +127,6 @@ client.on(`chat`, async (channel, user, message, self) => {
         let tmp = message.split(" ");
         if(tmp[0].slice(1,tmp[0].length)==="join"){
             fs.appendFileSync(channelsFile, " "+tmp[1]); 
-            client.say(channel,"added " +tmp[1]+" to channels");
             client.say(channel,"added " +tmp[1]+" to channels, restarting");
             fs.appendFileSync(channelsFile, ' "' + tmp[1]+ '"'); 
             process.exit(1);
