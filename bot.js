@@ -46,14 +46,6 @@ client.on(`chat`, (channel, user, message, self) => {
     }
 })
 
-client.on('chat', (channel, tags, message, self, user, username) => {
-    if(self) return;
-    if(tags.username=="xzn1"&&cd.fire()){
-        if(i%2==0)client.say(channel,`${tags.username} stfu WeirdChamp`);
-        else client.say(channel,`${tags.username} stfu WeirdChamp` + " " + "⠀");
-    }
-});
-
 client.on(`chat`, (channel, user, message, self) => {
     if (self) return;
     if (message == `TriAlien`&&cd.fire()) {
