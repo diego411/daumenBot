@@ -49,8 +49,8 @@ client.on(`chat`, (channel, user, message, self) => {
 client.on(`chat`, (channel, user, message, self) => {
     if (self) return;
     if (message == `TriAlien`&&cd.fire()) {
-        if(i%2==0)client.say(channel, `TriAlien`)
-        else client.say(channel, `TriAlien⠀`)
+        if(i%2==0)client.say(channel, `TriDance`)
+        else client.say(channel, `TriDance⠀`)
         i++;
     }
 })
@@ -84,7 +84,7 @@ client.on('chat', (channel, user, message, self) => {
 
 client.on(`chat`, (channel, tags, message, self) => {
     if(self) return;
-    if(message === 'PogU'&&cd.fire()) {
+    if(message.includes('PogU')&&cd.fire()) {
     if(i%2==0)client.say(channel, `${tags.username}, PagChomp Clap`)
         else client.say(channel, `${tags.username}, PagChomp Clap` + " " + "⠀")
         i++;
