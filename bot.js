@@ -46,14 +46,6 @@ client.on(`chat`, (channel, user, message, self) => {
     }
 })
 
-client.on('chat', (channel, tags, message, self, user, username) => {
-    if(self) return;
-    if(tags.username=="xzn1"&&cd.fire()){
-        if(i%2==0)client.say(channel,`${tags.username} stfu WeirdChamp`);
-        else client.say(channel,`${tags.username} stfu WeirdChamp` + " " + "⠀");
-    }
-});
-
 client.on(`chat`, (channel, user, message, self) => {
     if (self) return;
     if (message == `TriAlien`&&cd.fire()) {
@@ -126,9 +118,16 @@ client.on(`chat`, async (channel, user, message, self) => {
     if(isCommand(message)&&cd.fire()) {
         let tmp = message.split(" ");
         if(tmp[0].slice(1,tmp[0].length)==="join"){
+<<<<<<< HEAD
             fs.appendFileSync(channelsFile, " "+tmp[1]); 
             client.say(channel,"added " +tmp[1]+" to channels, restarting");
             fs.appendFileSync(channelsFile, ' "' + tmp[1]+ '"'); 
+=======
+            fs.appendFileSync(channelsFile, ' "' + tmp[1]+ '"'); 
+            client.say(channel,"added " +tmp[1]+" to channel, restarting");
+            client.say(channel,"/follow "+tmp[1]);
+            cd.fire();
+>>>>>>> e572a816b4c4cdf33fcaedf86b6c50840b67b480
             process.exit(1);
         }
     }
@@ -143,6 +142,7 @@ client.on(`chat`, async (channel, user, message, self) => {
                 }
             }
             fs.writeFileSync(channelsFile,s.toString());
+            cd.fire();
             process.exit(1);
         }
     }
