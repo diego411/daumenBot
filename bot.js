@@ -39,12 +39,16 @@ client.connect();
 
 let i=0;
 
-client.on(`chat`, (channel, user, message, self)=>{
+client.on(`chat`, (channel, tags, message, self)=>{
     if(self) return;
-    if(weebDetected(message)) client.say(`${tags.username}, NaM stfu`);
+    if(weebDetected(message)&&cd.fire()){
+        console.log(message);
+        client.say(channel,`${tags.username}, NaM stfu`);
+    }
+    else return;
 });
 
-client.on(`chat`, (channel, user, message, self) => {
+client.on(`chat`, (channel, tags, message, self) => {
     if (self) return;
     if (message == `widepeepoHappy`&&cd.fire()) {
         if(i%2==0)client.say(channel, `widepeepoHappy`)
@@ -87,7 +91,7 @@ client.on('chat', (channel, user, message, self) => {
     }
 });
 
-client.on(`chat`, async (channel, user, message, self) => {
+/*client.on(`chat`, async (channel, user, message, self) => {
     if(self) return;
     if(user['user-id'] != '150819483'&&user['user-id'] != '124776535') {
         if(message.startsWith('!join'))
@@ -99,7 +103,7 @@ client.on(`chat`, async (channel, user, message, self) => {
             }
         }
     }
-});
+}); */
 
 
 //commands
@@ -133,7 +137,7 @@ client.on(`chat`, async (channel, tags, message, self) => {
             })
         }
         if(tmp[0].slice(1,tmp[0].length)==="pyramid"&&(client.userstate[channel].mod)){
-            if(weebDetected(message)) client.say("NaM stfu");
+            if(weebDetected(message)) client.say(channel,"NaM stfu");
             else if(message.includes('WebPepeSmash')){
                 let emote = 'peepoWeebSmash'
                 let n = tmp[2];
@@ -186,9 +190,10 @@ function weebDetected(m) {
     s = s.split(" ");
 
     for(let i=0;i<s.length;i++){
-        if(m.contains(s[i])) return true;
+        if(m.includes(s[i])&&s[i]!='') return true;
     }
 
     return false;
 }
+
 
