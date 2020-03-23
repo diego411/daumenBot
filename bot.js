@@ -42,8 +42,9 @@ let i=0;
 client.on(`chat`, (channel, tags, message, self)=>{
     if(self) return;
     if(weebDetected(message)&&cd.fire()){
-        console.log(message);
-        client.say(channel,`${tags.username}, NaM stfu`);
+        if(i%2===0)client.say(channel,`${tags.username}, NaM stfu`);
+        else client.say(channel,`${tags.username}, NaM stfu weeb`);
+        i++;
     }
     else return;
 });
@@ -168,6 +169,12 @@ client.on(`chat`, async (channel, tags, message, self) => {
         if(tmp[0].slice(1,tmp[0].length)==="test"){
             client.say(channel,"test");
             console.log("test");
+        }
+        if(tmp[0].slice(1,tmp[0].length)==="addToBlackList"){
+            fs.appendFileSync(blackList, " "+tmp[1]);  
+            client.say(channel,"added " +tmp[1]+" to blacklist, restarting");
+            cd.fire();
+            process.exit(1);
         }
     }  
 });
