@@ -176,6 +176,10 @@ client.on(`chat`, async (channel, tags, message, self) => {
             cd.fire();
             process.exit(1);
         }
+        if(tmp[0].slice(1,tmp[0].length)==="channellist"){
+            let s = fs.readFileSync(channelsFile).toString();
+            client.say(channel,s);
+        }
     }  
 });
 
