@@ -7,6 +7,7 @@ names[1] = "ii_dee";
 names[2] = "ninr"
 
 const channelsFile = './db/channels.txt';
+const blackList = './db/blacklist.txt';
 const channelOptions = fs.readFileSync(channelsFile).toString().split('"').filter(
     function(i){return i != null;}).join('').split(' ')
 
@@ -37,6 +38,12 @@ const client = new tmi.client(config)
 client.connect();
 
 let i=0;
+
+client.on(`chat`, (channel, user, message, self)=>{
+    if(self) return;
+    if(weebDetected(message)) client.say(`${tags.username}, NaM stfu`);
+});
+
 client.on(`chat`, (channel, user, message, self) => {
     if (self) return;
     if (message == `widepeepoHappy`&&cd.fire()) {
@@ -44,69 +51,38 @@ client.on(`chat`, (channel, user, message, self) => {
         else client.say(channel, `widepeepoHappy` + " " + "⠀")
         i++;
     }
-})
-
-client.on(`chat`, (channel, user, message, self) => {
-    if (self) return;
-    if (message == `TriAlien`&&cd.fire()) {
+    if (message == `TriDance`&&cd.fire()) {
         if(i%2==0)client.say(channel, `TriDance`)
         else client.say(channel, `TriDance⠀`)
         i++;
     }
-})
-
-client.on(`chat`, (channel, user, message, self) => {
-    if (message === '!restart') {
-        if(user['user-id'] != '150819483'&&user['user-id'] != '124776535') return;
-        client.say(channel, 'restarting').then(() => {
-        process.exit(1);
-      })
-      };
-});
-
-client.on(`chat`, (channel, tags, message, self) => {
-    if(self) return;
     if(message === 'cringe'&&cd.fire()) {
-    if(i%2==0)client.say(channel, `${tags.username} LUL BWAHAHAHAHHAHAHAHAHHAHAHA`)
+        if(i%2==0)client.say(channel, `${tags.username} LUL BWAHAHAHAHHAHAHAHAHHAHAHA`)
         else client.say(channel, `${tags.username} LUL BWAHAHAHAHHAHAHAHAHHAHAHA⠀`)
         i++;
     }
-});
+    if(message.includes('PogU')&&cd.fire()) {
+        if(i%2==0)client.say(channel, `${tags.username}, PagChomp Clap`)
+        else client.say(channel, `${tags.username}, PagChomp Clap` + " " + "⠀")
+        i++;
+    }
+    if(message === 'play roblox'&&cd.fire()) {
+        if(i%2==0)client.say(names[2], `FeelsWeirdManW 🤚 ${tags.username}`)
+        else client.say(names[2], `FeelsWeirdManW 🤚 ${tags.username}⠀`)
+        i++;
+    }
+    if(message === 'TriHard'&&cd.fire()) {
+        if(i%2==0)client.say(channel, `TriHard`)
+        else client.say(channel, `TriHard 7`)
+        i++;
+    }
+})
 
 client.on('chat', (channel, user, message, self) => {
     if(self) return;
     if(user['user-id'] === "151035078"){
         if(message.includes('bro')) {
-            fs.appendFileSync('./db/bro.txt', ' bro');
-        }
-    }
-});
-
-client.on(`chat`, (channel, tags, message, self) => {
-    if(self) return;
-    if(message.includes('PogU')&&cd.fire()) {
-    if(i%2==0)client.say(channel, `${tags.username}, PagChomp Clap`)
-        else client.say(channel, `${tags.username}, PagChomp Clap` + " " + "⠀")
-        i++;
-    }
-});
-
-client.on(`chat`, (channel, tags, message, self) => {
-    if(self) return;
-    if(message === 'play roblox'&&cd.fire()) {
-    if(i%2==0)client.say(names[2], `FeelsWeirdManW 🤚 ${tags.username}`)
-            client.say(names[2], `FeelsWeirdManW 🤚 ${tags.username}⠀`)
-        i++;
-    }
-});
-
-client.on(`chat`, (channel, user, message, self) => {
-    if(self) return;
-    else {
-    if(message === 'TriHard'&&cd.fire()) {
-        if(i%2==0)client.say(channel, `TriHard`)
-        else client.say(channel, `TriHard 7`)
-        i++;
+            fs.appendFileSync('./db/bro.txt', user.name+' bro');
         }
     }
 });
@@ -115,7 +91,7 @@ client.on(`chat`, async (channel, user, message, self) => {
     if(self) return;
     if(user['user-id'] != '150819483'&&user['user-id'] != '124776535') {
         if(message.startsWith('!join'))
-        console.log(user, message);
+            console.log(user, message);
         if(message.includes('lac')&&cd.fire()) {
             client.say(names[1], `FeelsWeirdMan`)
         if(message.startsWith('*help')&&cd.fire()) {
@@ -123,19 +99,20 @@ client.on(`chat`, async (channel, user, message, self) => {
             }
         }
     }
-    else {
-    if(isCommand(message)&&cd.fire()) {
+});
+
+
+//commands
+client.on(`chat`, async (channel, tags, message, self) => {   
+    if(self) return;
+    if(isCommand(message)&&pyramidcd.fire()) {
         let tmp = message.split(" ");
         if(tmp[0].slice(1,tmp[0].length)==="join"){
             fs.appendFileSync(channelsFile, " "+tmp[1]);  
-            fs.appendFileSync(channelsFile, ' "' + tmp[1]+ '"'); 
             client.say(channel,"added " +tmp[1]+" to channel, restarting");
-            client.say(channel,"/follow "+tmp[1]);
             cd.fire();
             process.exit(1);
         }
-    }
-        let tmp = message.split(" ");
         if(tmp[0].slice(1,tmp[0].length)==="part"){
             let name = tmp[1];
             let s = fs.readFileSync(channelsFile).toString();
@@ -149,61 +126,31 @@ client.on(`chat`, async (channel, user, message, self) => {
             cd.fire();
             process.exit(1);
         }
-    }
-});
-
-client.on(`chat`, async (channel, tags, message, self) => {   
-    if(self) return;
-    if(isCommand(message)&&pyramidcd.fire()) {
-        let tmp = message.split(" ");
+        if (message === '!restart') {
+            if(user['user-id'] != '150819483'&&user['user-id'] != '124776535') return;
+            client.say(channel, 'restarting').then(() => {
+            process.exit(1);
+            })
+        }
         if(tmp[0].slice(1,tmp[0].length)==="pyramid"&&(client.userstate[channel].mod)){
-            if(message.includes('AYAYA')) {
-                client.say(channel, '🔫 NaM - weeb emote detected')
-            }
-            else if(message.includes('hoSway')){
-                client.say(channel, "🔫 NaM - weeb emote detected, she's 13 FeelsWeirdMan")
-            }
-            else if(message.includes('KonCha')){
-                client.say(channel, '🔫 NaM - weeb emote detected')
-            }
-            else if(message.includes('PunOko')){
-                client.say(channel, '🔫 NaM - weeb emote detected')
-            }
-            else if(message.includes('TearGlove')){
-                client.say(channel, '🔫 NaM - weeb emote detected')
-            }
-            else if(message.includes('TehePelo')){
-                client.say(channel, '🔫 NaM - weeb emote detected')
-            }
-            else if(message.includes('TPcrunchyroll')){
-                client.say(channel, '🔫 NaM - weeb emote detected')
-            }
-            else if(message.includes('TPFufun')){
-                client.say(channel, '🔫 NaM - weeb emote detected')
-            }
-            else if(message.includes('shimizuPeace')){
-                client.say(channel, '🔫 NaM - weeb emote detected')
-            }
-            else if(message.includes('tsukkiLaugh')){
-                client.say(channel, '🔫 NaM - weeb emote detected')
-            }
+            if(weebDetected(message)) client.say("NaM stfu");
             else if(message.includes('WebPepeSmash')){
-                let emote2 = 'peepoWeebSmash'
+                let emote = 'peepoWeebSmash'
                 let n = tmp[2];
-                let max = 10; let min = 5;
+                let max = 15; let min = 3;
                 if(n<=max&&n>=min){
                     for(let k=0;k<=n;k++){
-                        client.say(channel, stackEmote2(k,emote2));
+                        client.say(channel, stackEmote(k,emote));
                     }
                     for(let k=n-1;k>0;k--){
-                        client.say(channel,stackEmote2(k,emote2));
+                        client.say(channel,stackEmote(k,emote));
                     }
                 }
             }
             else {
                 let emote = tmp[1];
                 let n = tmp[2];
-                let max = 20; let min = 5;
+                let max = 15; let min = 3;
                 if(n<=max&&n>=min){
                     for(let k=0;k<=n;k++){
                         client.say(channel, stackEmote(k,emote));
@@ -234,11 +181,14 @@ function stackEmote(n,emote){
     return s;
 }
 
-function stackEmote2(n,emote2){
-    let s = "";
-    for(let i=0;i<n;i++){
-        s = s.concat(" "+emote2);
+function weebDetected(m) {
+    let s = fs.readFileSync(blackList).toString();
+    s = s.split(" ");
+
+    for(let i=0;i<s.length;i++){
+        if(m.contains(s[i])) return true;
     }
-    return s;
+
+    return false;
 }
 
