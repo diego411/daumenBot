@@ -115,6 +115,7 @@ client.on(`chat`, async (channel, tags, message, self) => {
         if(tmp[0].slice(1,tmp[0].length)==="join"){
             fs.appendFileSync(channelsFile, " "+tmp[1]);  
             client.say(channel,"added " +tmp[1]+" to channel, restarting");
+            fs.writeFileSync(channelsFile,fs.readFileSync(channelsFile).toString());
             cd.fire();
             process.exit(1);
         }
@@ -174,6 +175,7 @@ client.on(`chat`, async (channel, tags, message, self) => {
         if(tmp[0].slice(1,tmp[0].length)==="addToBlackList"){
             fs.appendFileSync(blackList, " "+tmp[1]);  
             client.say(channel,"added " +tmp[1]+" to blacklist, restarting");
+            fs.writeFileSync(blackList,fs.readFileSync(blackList).toString());
             cd.fire();
             process.exit(1);
         }
