@@ -128,6 +128,7 @@ client.on(`chat`, async (channel, tags, message, self) => {
                 }
             }
             fs.writeFileSync(channelsFile,s.toString());
+            client.say(channel,"removed "+name+" from channellist");
             cd.fire();
             process.exit(1);
         }
@@ -176,8 +177,26 @@ client.on(`chat`, async (channel, tags, message, self) => {
             cd.fire();
             process.exit(1);
         }
-        if(tmp[0].slice(1,tmp[0].length)==="channellist"){
+        if(tmp[0].slice(1,tmp[0].length)==="removeFromBlackList"){
+            let name = tmp[1];
+            let s = fs.readFileSync(blackList).toString();
+            s = s.split(" ");
+            for(let k=0;k<s.length;k++){
+                if(s[k]===name){
+                    s.splice(k);
+                }
+            }
+            fs.writeFileSync(channelsFile,s.toString());
+            client.say(channel,"removed "+name+" from blacklist");
+            cd.fire();
+            process.exit(1);
+        }
+        if(tmp[0].slice(1,tmp[0].length)==="channels"){
             let s = fs.readFileSync(channelsFile).toString();
+            client.say(channel,s);
+        }
+        if(tmp[0].slice(1,tmp[0].length)==="blacklist"){
+            let s = fs.readFileSync(blackList).toString();
             client.say(channel,s);
         }
     }  
