@@ -39,13 +39,19 @@ const client = new tmi.client(config)
 client.connect();
 
 let i=0;
+let weebC = 0;
+
+loop(); loop1();
 
 client.on(`chat`, (channel, tags, message, self)=>{
     if(self) return;
-    if(weebDetected(message)&&weebcd.fire()){
+    if(weebDetected(message)) weebC++;
+    if((message.includes("daumenbot")&&weebDetected(message)&&weebcd.fire())||(weebC%10===0&&weebcd.fire())){
         if(i%2===0)client.say(channel,`${tags.username}, NaM stfu`);
+        else if(i%5===0) client.say(channel,`${tags.username}, NaM 🇻🇳 ⣰⠛⣦⠛⣿⠛⢸⠛⠛⣿⠀⣿⠀⠸⡇⣸⡄⡿⢸⠛⠛⣿⠛⠃⣿⠛⡆⣴⠛⣦⠀ ⠘⠷⣄⠀⣿⠀⢸⠶⠆⣿⠀⣿⠀⠀⣇⡇⣇⡇⢸⠶⠆⣿⠶⠆⣿⠾⡅⠙⠶⣄⠀ ⠻⣤⠟⠀⠿⠀⠸⠀⠀⠹⣤⠟⠀⠀⠹⠃⠻⠀⠸⠤⠤⠿⠤⠄⠿⠤⠇⠻⣤⠟ `)
         else client.say(channel,`${tags.username}, NaM stfu weeb`);
         i++;
+        weebC++;
     }
     else return;
 });
@@ -109,9 +115,9 @@ client.on('chat', (channel, user, message, self) => {
 
 
 //commands
-client.on(`chat`, async (channel, tags, message, self) => {   
+client.on(`chat`, async (channel, user, message, self) => {   
     if(self) return;
-    if(isCommand(message)&&pyramidcd.fire()) {
+    if(isCommand(message)&&cd.fire()) {
         let tmp = message.split(" ");
         if(tmp[0].slice(1,tmp[0].length)==="join"&&isAdmin(user)){
             fs.appendFileSync(channelsFile, " "+tmp[1]);  
@@ -140,12 +146,12 @@ client.on(`chat`, async (channel, tags, message, self) => {
             process.exit(1);
             })
         }
-        if(tmp[0].slice(1,tmp[0].length)==="pyramid"&&(client.userstate[channel].mod||client.userstate[channel].badges.vip===1)&&isAdmin(user)){
-            if(weebDetected(message)) client.say(channel,"NaM stfu");
-            else if(message.includes('WebPepeSmash')){
+        if(tmp[0].slice(1,tmp[0].length)==="pyramid"&&(client.userstate[channel].mod||client.userstate[channel].badges.vip==='1')&&isAdmin(user)){
+            //if(weebDetected(message)) client.say(channel,"NaM stfu");
+            if(message.includes('WebPepeSmash')){
                 let emote = 'peepoWeebSmash'
                 let n = tmp[2];
-                let max = 20; let min = 3;
+                let max = 5; let min = 3;
                 if(n<=max&&n>=min){
                     for(let k=0;k<=n;k++){
                         client.say(channel, stackEmote(k,emote));
@@ -158,7 +164,7 @@ client.on(`chat`, async (channel, tags, message, self) => {
             else {
                 let emote = tmp[1];
                 let n = tmp[2];
-                let max = 20; let min = 3;
+                let max = 5; let min = 3;
                 if(n<=max&&n>=min){
                     for(let k=0;k<=n;k++){
                         client.say(channel, stackEmote(k,emote));
@@ -174,7 +180,7 @@ client.on(`chat`, async (channel, tags, message, self) => {
         }
         if(tmp[0].slice(1,tmp[0].length)==="test"){
             client.say(channel,"test");
-            console.log("test");
+            console.log(client.userstate[channel].badges.vip==='1');
         }
         if(tmp[0].slice(1,tmp[0].length)==="addToBlackList"){
             fs.appendFileSync(blackList, " "+tmp[1]);  
@@ -192,7 +198,7 @@ client.on(`chat`, async (channel, tags, message, self) => {
                     s.splice(k);
                 }
             }
-            fs.writeFileSync(channelsFile,s.toString());
+            fs.writeFileSync(blackList,s.toString());
             client.say(channel,"removed "+name+" from blacklist");
             cd.fire();
             process.exit(1);
@@ -201,14 +207,12 @@ client.on(`chat`, async (channel, tags, message, self) => {
             let s = fs.readFileSync(channelsFile).toString();
             client.say(channel,s);
         }
-        if(tmp[0].slice(1,tmp[0].length)==="blacklist"){
-            let s = fs.readFileSync(blackList).toString();
-            client.say(channel,s);
-        }
         if(tmp[0].slice(1,tmp[0].length)==="trihard"&&pyramidcd.fire()){
+            console.log("trihard");
             client.say(channel, `⣿⣿⣿⣿⣿⠿⠿⠟⠟⠉⠉⠉⠉⠛⠛⠉⠻⠿⠻⠿⢿⣿⣿⣿⣿⡇ ⣿⣿⣿⡿⠇⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠈⠹⢿⣿⣿⡇ ⣿⣿⠏⠁⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠹⣿⡇ ⠟⠋⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⢻⡇ ⣷⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⢀⣀⣀⣀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠇ ⡏⠄⠄⠄⠄⠄⠄⠄⠄⢠⣾⣿⣿⣿⣿⣿⣷⣶⣦⣀⠄⠄⠄⠄⠄⠃ ⣇⣀⠄⠄⠄⠄⠄⠄⠄⣺⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠄⠄⠄⠄⠄⡀ ⣿⣿⣤⣤⡄⠄⠄⣠⣬⣼⣯⣟⣿⣿⣿⣿⣿⣿⣿⣧⠄⠄⠄⢀⣾⡇ ⣿⣿⣿⣿⠃⠄⠄⣿⣯⣔⣆⣠⣍⣿⣿⣿⡿⣛⡉⡐⠄⣀⣤⣾⣿⡇ ⣿⣿⣿⣿⠄⠄⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⢤⣿⣀⣁⡄⣿⣿⣿⣿⡇ ⣿⣿⣿⣿⠄⠄⠈⠿⣿⣿⣿⣿⣿⣿⣿⣿⣄⣿⣿⣿⣆⣿⣿⣿⣿⡇ ⣿⣿⣿⣿⣇⠄⠄⡀⢋⢩⣙⣛⣿⣿⡟⠉⠋⠛⠛⢋⣽⣿⣿⣿⣿⡇ ⣿⣿⣿⣿⣿⣆⠄⠄⢼⣧⣿⣿⣿⣿⣿⡥⡠⢒⣴⣿⣿⣿⣿⣿⣿⡇ ⣿⣿⣿⣿⣿⣿⣧⠄⢹⣿⣿⣿⣿⣿⣿⠅⢡⣿⣿⣿⣿⣿⣿⣿⣿⡇ ⣿⣿⣿⣿⣿⣿⣿⣧⡈⣿⣿⣯⣭⣭⣡⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇ ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣉⣉⣛⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇`);
         }
-        if (tmp[0].slice(1, tmp[0].length) === "say"&&cd.fire()&&isAdmin(user)) {
+        if (tmp[0].slice(1, tmp[0].length) === "say"&&isAdmin(user)) {
+            console.log("trihard");
             client.say(channel, message.slice(4));
         }
     }  
@@ -239,7 +243,32 @@ function weebDetected(m) {
 }
 
 function isAdmin(user){
-    return (user['user-id'] === '150819483'||user['user-id'] === '124776535'||user['user-id'] === '198160641 ');
+    return (user['user-id'] === '150819483'||user['user-id'] === '124776535'||user['user-id'] === '198160641'||user['user-id']==='44159749' );
+}
+
+function loop(){ 
+    let s = fs.readFileSync(channelsFile).toString();
+    s = s.split(" ");
+
+    for(let i=0;i<s.length;i++){
+        client.say(s[i],"⣿⣿⣿⣿⣿⣿⠿⠛⣉⣍⠁⠄⠈⠉⠉⠉⠉⠉⠉⡩⣍⡻⣿⣿⣿⣿⣿⣿ ⣿⣿⣿⣿⡿⢃⣴⡿⠛⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠘⢷⣝⣞⢿⣿⣿⣿⣿ ⣿⣿⣿⠟⣰⣿⠟⠁⠄⠄⠄⠄⠄⠄⢀⣀⣤⠄⠄⠄⠄⠙⢯⣻⣿⣿⣿⣿ ⣿⣿⣿⣸⣿⠏⠄⠄⠄⠄⠄⢀⣤⣴⣿⣿⣿⣷⡄⠄⠄⠄⠄⣧⠛⣿⣿⣿ ⣿⣿⡇⣿⣯⠄⠄⠄⠄⠄⠄⢸⣿⣿⣿⣿⣿⣿⣷⠦⠄⠄⠄⠉⠂⢹⣿⣿ ⣿⣿⡇⡿⠃⠄⠄⠄⠄⠄⠄⣉⣛⣿⣿⣿⣿⣿⣶⣶⣤⣴⠄⠄⠄⠘⢿⣿ ⣿⣿⠄⠄⠄⠄⠄⠄⠄⠄⠋⡉⠻⣿⣿⣿⣿⢫⡉⠄⢹⣿⡀⠐⠂⢁⣾⣿ ⣿⣿⡀⠄⠄⠄⠄⠄⠈⠄⣀⣥⣦⡾⠄⣿⣿⣶⣿⣿⣿⣿⡇⠄⠄⠸⣿⣿ ⣿⣿⣇⠄⠄⠄⠄⠄⠄⢼⣿⣿⣿⠏⠄⣽⣿⣿⣿⣿⣿⣿⡇⠄⡀⠄⣿⣿ ⣿⣿⣿⣷⡀⠄⠄⠄⢀⠘⢿⣿⣿⠄⠂⠛⣛⣿⣿⣿⣿⣿⣇⣾⣿⠄⣿⣿ ⣿⣿⣿⣿⣿⣿⣿⣦⠸⣿⣼⡏⠁⠄⠘⢻⡛⢓⡛⣿⣿⡿⣼⣿⣿⢀⣿⣿ ⣿⣿⣿⣿⣿⣿⣿⣿⣇⠘⠏⠃⠄⣤⣴⣶⣶⣿⣿⣿⢻⣾⣿⣿⣧⣾⣿⣿ ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⡀⠈⠻⣿⣿⣽⣿⠋⣰⣿⣿⣿⣿⣿⣿⣿⣿ ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣤⣈⠙⢉⣰⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿ ")
+    }
+    try{
+        setTimeout(()=>{ loop()}, 1800000)
+    }catch(err){
+        console.log(err);
+    }
+}
+
+function loop1(){
+    let s = fs.readFileSync(channelsFile).toString();
+    s = s.split(" ");
+
+    for(let i=0;i<s.length;i++){
+        client.say(s[i],"NaM");
+    }
+
+    setTimeout(() => {loop1()}, 300000);
 }
 
 
