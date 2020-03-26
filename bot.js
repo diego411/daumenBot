@@ -41,7 +41,7 @@ client.connect();
 let i=0;
 let weebC = 0;
 
-loop(); loop1();
+loop(); //loop1();
 
 client.on(`chat`, (channel, tags, message, self)=>{
     if(self) return;
@@ -215,6 +215,9 @@ client.on(`chat`, async (channel, user, message, self) => {
             console.log("trihard");
             client.say(channel, message.slice(4));
         }
+        if(tmp[0].slice(1, tmp[0].length) === "help"){
+
+        }
     }  
 });
 
@@ -260,7 +263,7 @@ function loop(){
     }
 }
 
-function loop1(){
+/*function loop1(){
     let s = fs.readFileSync(channelsFile).toString();
     s = s.split(" ");
 
@@ -270,5 +273,5 @@ function loop1(){
 
     setTimeout(() => {loop1()}, 300000);
 }
-
+*/
 
