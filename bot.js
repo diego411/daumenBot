@@ -147,7 +147,7 @@ client.on(`chat`, async (channel, user, message, self) => {
             })
         }
         if(tmp[0].slice(1,tmp[0].length)==="pyramid"&&(client.userstate[channel].mod||client.userstate[channel].badges.vip==='1')&&isAdmin(user)){
-            //if(weebDetected(message)) client.say(channel,"NaM stfu");
+            if(weebDetected(message)) client.say(channel,"NaM stfu");
             if(message.includes('WebPepeSmash')){
                 let emote = 'peepoWeebSmash'
                 let n = tmp[2];
