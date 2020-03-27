@@ -216,7 +216,21 @@ client.on(`chat`, async (channel, user, message, self) => {
             client.say(channel, message.slice(4));
         }
         if(tmp[0].slice(1, tmp[0].length) === "help"){
-
+            client.say('My commands are !trihard')
+        }
+        if (tmp[0].slice(1, tmp[0].length) === "userid"&&isAdmin(user)) { 
+            client.api({
+                url: "https://api.twitch.tv/kraken/users?login=" + tmp[1],
+                method: "GET",
+                headers: {
+                    "Accept": "application/vnd.twitchtv.v5+json",
+                    "Client-ID": ""
+                }
+            }, (err, res, body) => {
+                let id=[]
+                id[0] = body['_id']
+                client.say(channel, id[0].toString())
+            });
         }
     }  
 });
