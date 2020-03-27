@@ -176,7 +176,7 @@ client.on(`chat`, async (channel, user, message, self) => {
             }
         }
         if(tmp[0].slice(1,tmp[0].length)==="pyramid"&&(!client.userstate[channel].mod)){
-            
+            return;
         }
         if(tmp[0].slice(1,tmp[0].length)==="test"){
             client.say(channel,"test");
@@ -215,24 +215,43 @@ client.on(`chat`, async (channel, user, message, self) => {
             console.log("trihard");
             client.say(channel, message.slice(4));
         }
-        if(tmp[0].slice(1, tmp[0].length) === "help"){
-            client.say('My commands are !trihard')
-        }
-        if (tmp[0].slice(1, tmp[0].length) === "userid"&&isAdmin(user)) { 
+        if(tmp[0].slice(1, tmp[0].length) === "follow"&&isAdmin(user)){
+            if (isNaN(tmp[1])) {
+                client.say(channel, `you must use a user id, use !userid to translate a username to a user id.`)
+            } else {
             client.api({
-                url: "https://api.twitch.tv/kraken/users?login=" + tmp[1],
-                method: "GET",
+                url: "https://api.twitch.tv/kraken/users/499914093/follows/channels/" + tmp[1],
+                method: "PUT",
                 headers: {
-                    "Accept": "application/vnd.twitchtv.v5+json",
-                    "Client-ID": ""
+                    "Accept": 'application/vnd.twitchtv.v5+json',
+                    "Authorization": 'OAuth 7ypcx2vwofjp1inafz500r5t7cn114',
+                    "Client-ID": 'q7812vg3hcq1rv3s8025y157fxzpmn'
                 }
             }, (err, res, body) => {
-                let id=[]
-                id[0] = body['_id']
-                client.say(channel, id[0].toString())
+                if(err) {
+                    throw err;
+                } else {
+                    client.say(channel, "successfully followed " +tmp[1]+ " FeelsOkayMan");
+                    }
+                });
+            }
+        }
+        if(tmp[0].slice(1, tmp[0].length) === "help"){
+            client.say('My commands are !trihard, !pyramid, !channels, TriHard, PogU, TriDance, widepeepoHappy.')
+        }
+        if (tmp[0].slice(1, tmp[0].length) === "userid"&&isAdmin(user)){
+            client.api({
+                    url: "https://api.twitch.tv/kraken/users?login=" + tmp[1],
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/vnd.twitchtv.v5+json",
+                        "Client-ID": "q7812vg3hcq1rv3s8025y157fxzpmn"
+                    }
+                }, (err, res, body) => {
+                client.say(channel, tmp[1] + "'s user id is " + body.users[0]['_id']);
             });
         }
-    }  
+    }
 });
 
 function isCommand(m){
@@ -260,8 +279,9 @@ function weebDetected(m) {
 }
 
 function isAdmin(user){
-    return (user['user-id'] === '150819483'||user['user-id'] === '124776535'||user['user-id'] === '198160641'||user['user-id']==='44159749' );
+    return (user['user-id'] === '150819483'||user['user-id'] === '124776535'||user['user-id'] === '198160641'||user['user-id']==='44159749'||user['user-id']==='497227712');
 }
+
 
 function loop(){ 
     let s = fs.readFileSync(channelsFile).toString();
