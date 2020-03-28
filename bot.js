@@ -204,8 +204,7 @@ client.on(`chat`, async (channel, user, message, self) => {
             process.exit(1);
         }
         if(tmp[0].slice(1,tmp[0].length)==="channels"){
-            let s = fs.readFileSync(channelsFile).toString();
-            client.say(channel,s);
+            client.say(channel, "currently in channels: " + client.getChannels());
         }
         if(tmp[0].slice(1,tmp[0].length)==="trihard"&&pyramidcd.fire()){
             console.log("trihard");
