@@ -302,6 +302,7 @@ function isAdmin(user){
 }
 
 function vary(message){
+    i++;
     if(i%2==0) return `${message} ⠀`;
     else return `${message}`;
 }
