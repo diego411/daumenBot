@@ -22,9 +22,10 @@ cd.on('ready', console.log.bind('console', 'off cooldown'));
 
 const config = {
     options: {
-        debug: false,
+        debug: true,
     },
     connection: {
+        cluster: "aws",
         secure: true,
         reconnect: true,
     },
@@ -40,55 +41,48 @@ client.connect();
 
 let i=0;
 let weebC = 0;
+let NaMloop = false;
 
-loop(); //loop1();
 
 client.on(`chat`, (channel, tags, message, self)=>{
     if(self) return;
     if(weebDetected(message)) weebC++;
-    if((message.includes("daumenbot")&&weebDetected(message)&&weebcd.fire())||(weebC%10===0&&weebcd.fire())){
+    if((message.includes("daumenbot")&&weebDetected(message)&&weebcd.fire())||(weebDetected(message)&&weebC%10===0&&weebcd.fire())){
         if(i%2===0)client.say(channel,`${tags.username}, NaM stfu`);
         else if(i%5===0) client.say(channel,`${tags.username}, NaM 🇻🇳 ⣰⠛⣦⠛⣿⠛⢸⠛⠛⣿⠀⣿⠀⠸⡇⣸⡄⡿⢸⠛⠛⣿⠛⠃⣿⠛⡆⣴⠛⣦⠀ ⠘⠷⣄⠀⣿⠀⢸⠶⠆⣿⠀⣿⠀⠀⣇⡇⣇⡇⢸⠶⠆⣿⠶⠆⣿⠾⡅⠙⠶⣄⠀ ⠻⣤⠟⠀⠿⠀⠸⠀⠀⠹⣤⠟⠀⠀⠹⠃⠻⠀⠸⠤⠤⠿⠤⠄⠿⠤⠇⠻⣤⠟ `)
         else client.say(channel,`${tags.username}, NaM stfu weeb`);
         i++;
-        weebC++;
     }
     else return;
 });
 
 client.on(`chat`, (channel, tags, message, self) => {
     if (self) return;
+
     if (message == `widepeepoHappy`&&cd.fire()) {
-        if(i%2==0)client.say(channel, `widepeepoHappy`)
-        else client.say(channel, `widepeepoHappy` + " " + "⠀")
-        i++;
-    }
+        client.say(channel, vary(`widepeepoHappy`));
+    };
+
     if (message == `TriDance`&&cd.fire()) {
-        if(i%2==0)client.say(channel, `TriDance`)
-        else client.say(channel, `TriDance⠀`)
-        i++;
-    }
+        client.say(channel, vary(`TriDance`));
+    };
+
     if(message === 'cringe'&&cd.fire()) {
-        if(i%2==0)client.say(channel, `${tags.username} LUL BWAHAHAHAHHAHAHAHAHHAHAHA`)
-        else client.say(channel, `${tags.username} LUL BWAHAHAHAHHAHAHAHAHHAHAHA⠀`)
-        i++;
-    }
+        client.say(channel, vary(`${tags.username} LUL BWAHAHAHAHHAHAHAHAHHAHAHA`));
+    };
+
     if(message.includes('PogU')&&cd.fire()) {
-        if(i%2==0)client.say(channel, `${tags.username}, PagChomp Clap`)
-        else client.say(channel, `${tags.username}, PagChomp Clap` + " " + "⠀")
-        i++;
-    }
+        client.say(channel, vary(`${tags.users}, PagChomp Clap`));
+    };
+
     if(message === 'play roblox'&&cd.fire()) {
-        if(i%2==0)client.say(names[2], `FeelsWeirdManW 🤚 ${tags.username}`)
-        else client.say(names[2], `FeelsWeirdManW 🤚 ${tags.username}⠀`)
-        i++;
-    }
-    if(message === 'TriHard'&&cd.fire()) {
-        if(i%2==0)client.say(channel, `TriHard`)
-        else client.say(channel, `TriHard 7`)
-        i++;
-    }
-})
+        client.say(names[2], vary(`FeelsWeirdManW 🤚 ${tags.username}`))
+    };
+
+    if(message.split(' ')[0] === 'TriHard'&&cd.fire()) {
+        client.say(channel, vary('TriHard'));
+    };
+});
 
 client.on('chat', (channel, user, message, self) => {
     if(self) return;
@@ -117,15 +111,19 @@ client.on('chat', (channel, user, message, self) => {
 //commands
 client.on(`chat`, async (channel, user, message, self) => {   
     if(self) return;
+    
     if(isCommand(message)&&cd.fire()) {
+
         let tmp = message.split(" ");
+
         if(tmp[0].slice(1,tmp[0].length)==="join"&&isAdmin(user)){
             fs.appendFileSync(channelsFile, " "+tmp[1]);  
             client.say(channel,"added " +tmp[1]+" to channel, restarting");
             fs.writeFileSync(channelsFile,fs.readFileSync(channelsFile).toString());
             cd.fire();
             process.exit(1);
-        }
+        };
+
         if(tmp[0].slice(1,tmp[0].length)==="part"&&isAdmin(user)){
             let name = tmp[1];
             let s = fs.readFileSync(channelsFile).toString();
@@ -139,13 +137,15 @@ client.on(`chat`, async (channel, user, message, self) => {
             client.say(channel,"removed "+name+" from channellist");
             cd.fire();
             process.exit(1);
-        }
+        };
+
         if (message === '!restart') {
             if(user['user-id'] != '150819483'&&user['user-id'] != '124776535') return;
             client.say(channel, 'restarting').then(() => {
             process.exit(1);
             })
-        }
+        };
+
         if(tmp[0].slice(1,tmp[0].length)==="pyramid"&&(client.userstate[channel].mod||client.userstate[channel].badges.vip==='1')&&isAdmin(user)){
             if(weebDetected(message)) client.say(channel,"NaM stfu");
             if(message.includes('WebPepeSmash')){
@@ -174,21 +174,25 @@ client.on(`chat`, async (channel, user, message, self) => {
                     }
                 }
             }
-        }
+        };
+
         if(tmp[0].slice(1,tmp[0].length)==="pyramid"&&(!client.userstate[channel].mod)){
             return;
-        }
+        };
+
         if(tmp[0].slice(1,tmp[0].length)==="test"){
             client.say(channel,"test");
             console.log(client.userstate[channel].badges.vip==='1');
-        }
+        };
+
         if(tmp[0].slice(1,tmp[0].length)==="addToBlackList"){
             fs.appendFileSync(blackList, " "+tmp[1]);  
             client.say(channel,"added " +tmp[1]+" to blacklist, restarting");
             fs.writeFileSync(blackList,fs.readFileSync(blackList).toString());
             cd.fire();
             process.exit(1);
-        }
+        };
+
         if(tmp[0].slice(1,tmp[0].length)==="removeFromBlackList"){
             let name = tmp[1];
             let s = fs.readFileSync(blackList).toString();
@@ -202,18 +206,32 @@ client.on(`chat`, async (channel, user, message, self) => {
             client.say(channel,"removed "+name+" from blacklist");
             cd.fire();
             process.exit(1);
-        }
+        };
+
         if(tmp[0].slice(1,tmp[0].length)==="channels"){
             client.say(channel, "currently in channels: " + client.getChannels());
-        }
+        };
+
         if(tmp[0].slice(1,tmp[0].length)==="trihard"&&pyramidcd.fire()){
             console.log("trihard");
             client.say(channel, `⣿⣿⣿⣿⣿⠿⠿⠟⠟⠉⠉⠉⠉⠛⠛⠉⠻⠿⠻⠿⢿⣿⣿⣿⣿⡇ ⣿⣿⣿⡿⠇⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠈⠹⢿⣿⣿⡇ ⣿⣿⠏⠁⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠹⣿⡇ ⠟⠋⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⢻⡇ ⣷⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⢀⣀⣀⣀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠇ ⡏⠄⠄⠄⠄⠄⠄⠄⠄⢠⣾⣿⣿⣿⣿⣿⣷⣶⣦⣀⠄⠄⠄⠄⠄⠃ ⣇⣀⠄⠄⠄⠄⠄⠄⠄⣺⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠄⠄⠄⠄⠄⡀ ⣿⣿⣤⣤⡄⠄⠄⣠⣬⣼⣯⣟⣿⣿⣿⣿⣿⣿⣿⣧⠄⠄⠄⢀⣾⡇ ⣿⣿⣿⣿⠃⠄⠄⣿⣯⣔⣆⣠⣍⣿⣿⣿⡿⣛⡉⡐⠄⣀⣤⣾⣿⡇ ⣿⣿⣿⣿⠄⠄⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⢤⣿⣀⣁⡄⣿⣿⣿⣿⡇ ⣿⣿⣿⣿⠄⠄⠈⠿⣿⣿⣿⣿⣿⣿⣿⣿⣄⣿⣿⣿⣆⣿⣿⣿⣿⡇ ⣿⣿⣿⣿⣇⠄⠄⡀⢋⢩⣙⣛⣿⣿⡟⠉⠋⠛⠛⢋⣽⣿⣿⣿⣿⡇ ⣿⣿⣿⣿⣿⣆⠄⠄⢼⣧⣿⣿⣿⣿⣿⡥⡠⢒⣴⣿⣿⣿⣿⣿⣿⡇ ⣿⣿⣿⣿⣿⣿⣧⠄⢹⣿⣿⣿⣿⣿⣿⠅⢡⣿⣿⣿⣿⣿⣿⣿⣿⡇ ⣿⣿⣿⣿⣿⣿⣿⣧⡈⣿⣿⣯⣭⣭⣡⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇ ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣉⣉⣛⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇`);
-        }
+        };
+
         if (tmp[0].slice(1, tmp[0].length) === "say"&&isAdmin(user)) {
             console.log("trihard");
             client.say(channel, message.slice(4));
-        }
+        };
+
+        if(tmp[0].slice(1).toLowerCase() == 'startnamming' && !NaMloop){
+            NaMloop = true;
+            loop();
+        };
+        if(tmp[0].slice(1).toLowerCase() == 'stopnamming' && NaMloop){
+            NaMloop = false;
+        };
+        
+
+
         if(tmp[0].slice(1, tmp[0].length) === "follow"&&isAdmin(user)){
             if (isNaN(tmp[1])) {
                 client.say(channel, `you must use a user id, use !userid to translate a username to a user id.`)
@@ -234,10 +252,12 @@ client.on(`chat`, async (channel, user, message, self) => {
                     }
                 });
             }
-        }
+        };
+
         if(tmp[0].slice(1, tmp[0].length) === "help"){
             client.say('My commands are !trihard, !pyramid, !channels, TriHard, PogU, TriDance, widepeepoHappy.')
-        }
+        };
+
         if (tmp[0].slice(1, tmp[0].length) === "userid"&&isAdmin(user)){
             client.api({
                     url: "https://api.twitch.tv/kraken/users?login=" + tmp[1],
@@ -249,8 +269,8 @@ client.on(`chat`, async (channel, user, message, self) => {
                 }, (err, res, body) => {
                 client.say(channel, tmp[1] + "'s user id is " + body.users[0]['_id']);
             });
-        }
-    }
+        };
+    };
 });
 
 function isCommand(m){
@@ -281,6 +301,11 @@ function isAdmin(user){
     return (user['user-id'] === '150819483'||user['user-id'] === '124776535'||user['user-id'] === '198160641'||user['user-id']==='44159749'||user['user-id']==='497227712');
 }
 
+function vary(message){
+    if(i%2==0) return `${message} ⠀`;
+    else return `${message}`;
+}
+
 
 function loop(){ 
     let s = fs.readFileSync(channelsFile).toString();
@@ -289,8 +314,11 @@ function loop(){
     for(let i=0;i<s.length;i++){
         client.say(s[i],"⣿⣿⣿⣿⣿⣿⠿⠛⣉⣍⠁⠄⠈⠉⠉⠉⠉⠉⠉⡩⣍⡻⣿⣿⣿⣿⣿⣿ ⣿⣿⣿⣿⡿⢃⣴⡿⠛⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠘⢷⣝⣞⢿⣿⣿⣿⣿ ⣿⣿⣿⠟⣰⣿⠟⠁⠄⠄⠄⠄⠄⠄⢀⣀⣤⠄⠄⠄⠄⠙⢯⣻⣿⣿⣿⣿ ⣿⣿⣿⣸⣿⠏⠄⠄⠄⠄⠄⢀⣤⣴⣿⣿⣿⣷⡄⠄⠄⠄⠄⣧⠛⣿⣿⣿ ⣿⣿⡇⣿⣯⠄⠄⠄⠄⠄⠄⢸⣿⣿⣿⣿⣿⣿⣷⠦⠄⠄⠄⠉⠂⢹⣿⣿ ⣿⣿⡇⡿⠃⠄⠄⠄⠄⠄⠄⣉⣛⣿⣿⣿⣿⣿⣶⣶⣤⣴⠄⠄⠄⠘⢿⣿ ⣿⣿⠄⠄⠄⠄⠄⠄⠄⠄⠋⡉⠻⣿⣿⣿⣿⢫⡉⠄⢹⣿⡀⠐⠂⢁⣾⣿ ⣿⣿⡀⠄⠄⠄⠄⠄⠈⠄⣀⣥⣦⡾⠄⣿⣿⣶⣿⣿⣿⣿⡇⠄⠄⠸⣿⣿ ⣿⣿⣇⠄⠄⠄⠄⠄⠄⢼⣿⣿⣿⠏⠄⣽⣿⣿⣿⣿⣿⣿⡇⠄⡀⠄⣿⣿ ⣿⣿⣿⣷⡀⠄⠄⠄⢀⠘⢿⣿⣿⠄⠂⠛⣛⣿⣿⣿⣿⣿⣇⣾⣿⠄⣿⣿ ⣿⣿⣿⣿⣿⣿⣿⣦⠸⣿⣼⡏⠁⠄⠘⢻⡛⢓⡛⣿⣿⡿⣼⣿⣿⢀⣿⣿ ⣿⣿⣿⣿⣿⣿⣿⣿⣇⠘⠏⠃⠄⣤⣴⣶⣶⣿⣿⣿⢻⣾⣿⣿⣧⣾⣿⣿ ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⡀⠈⠻⣿⣿⣽⣿⠋⣰⣿⣿⣿⣿⣿⣿⣿⣿ ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣤⣈⠙⢉⣰⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿ ")
     }
+
+    if(!NaMloop) return;
+
     try{
-        setTimeout(()=>{ loop()}, 1800000)
+        setTimeout(()=>{ loop()}, 1800000) //1800000
     }catch(err){
         console.log(err);
     }
