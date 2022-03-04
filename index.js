@@ -13,7 +13,7 @@ var rl = readline.createInterface({
   output: process.stdout,
 });
 
-app.use(express.json());
+app.use(express.text())
 
 app.get('/', (req, res) => {
   res.end('Alive!')
