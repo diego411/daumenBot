@@ -1,3 +1,2 @@
 # daumenBot
-FDM FDM FDM 
-FDM FDM FDM FDM  FDM FDM FDM FDM FDM 
+FDM 
