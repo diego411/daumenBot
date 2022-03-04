@@ -17,8 +17,8 @@ app.get('/', (req, res) => {
   res.end('Alive!')
 })
 
-app.get('/refresh', async (req, res) => {
-  console.log("repl.deploy" + req.body + req.headers.get("Signature"))
+app.post('/refresh', async (req, res) => {
+  console.log("repl.deploy" + req.body + req.header("Signature"))
 
   const result = JSON.parse((await getStdinLine()))
 
