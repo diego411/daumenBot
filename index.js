@@ -1,4 +1,44 @@
-require("http").createServer((_, res) => res.end("Alive!")).listen(8080)
+//const http = require('http');
+// http.createServer((_, res) => {
+//   res.end("Alive!")
+// }).listen(8080)
+const express = require('express')
+const app = express()
+const port = 8080;
+
+var readline = require('readline');
+
+var rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+app.get('/', (req, res) => {
+  res.end('Alive!')
+})
+
+app.get('/refresh', async (req, res) => {
+  console.log("repl.deploy" + req.body + req.headers.get("Signature"))
+
+  const result = JSON.parse((await getStdinLine()))
+
+  res.statusCode = result.statusCode
+  res.end(result.body)
+
+  console.log("repl.deploy-success")
+})
+
+app.listen(port, () => {
+
+})
+
+async function getStdinLine() {
+  for await (const line of rl) {
+    return line
+  }
+}
+
+
 const cooldown = require('cooldown');
 const fs = require('fs');
 const { ChatClient } = require("dank-twitch-irc");
@@ -103,10 +143,10 @@ client.on("PRIVMSG", (msg) => {
       // client.say(msg.channelName, 'Hope you have a good night ' + msg.senderUsername + ' Foreheadkiss ❤')
       client.say(msg.channelName, '$tuck ' + msg.senderUsername + ' Hope you have a good night Foreheadkiss ❤')
   }
-  if(isAlertEvent(msg) && cd.fire()){
+  if (isAlertEvent(msg) && cd.fire()) {
     if (i % 2 == 0) client.me(msg.channelName, `pajaSubs 🚨 ALERT`)
     else client.me(msg.channelName, "pajaSubs 🚨 ALERT ⠀")
-    i++; 
+    i++;
   }
 })
 
@@ -233,8 +273,8 @@ function isAdmin(msg) {
   return (msg.senderUserID === '150819483' || msg.senderUserID === '124776535' || msg.senderUserID === '275711366');
 }
 
-function isAlertEvent(msg){
-  return msg.isAction && 
+function isAlertEvent(msg) {
+  return msg.isAction &&
     msg.senderUsername == 'pajbot' &&
     msg.messageText.includes('pajaS 🚨 ALERT');
 }
