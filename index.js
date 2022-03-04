@@ -26,7 +26,7 @@ app.post('/refresh', async (req, res) => {
   const result = JSON.parse((await getStdinLine()))
 
   res.statusCode = await result.statusCode
-  await res.end(result.body)
+  res.end(await result.body)
 
   console.log("repl.deploy-success")
 })
