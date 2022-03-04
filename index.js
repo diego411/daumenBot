@@ -25,6 +25,7 @@ app.post('/refresh', async (req, res) => {
 
   const result = JSON.parse((await getStdinLine()))
 
+  await result
   res.statusCode = await result.statusCode
   res.end(await result.body)
 
