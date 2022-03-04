@@ -1,2 +1,2 @@
 # daumenBot
-FeelsDankMan FeelsDankManFeelsDankManFeelsDankManFeelsDankMan
+FeelsDankMan
