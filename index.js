@@ -110,7 +110,7 @@ client.on("PRIVMSG", (msg) => {
     i++;
   }
   if (msg == `TriDance`&&cd.fire()) {
-    client.say(channel, vary(`TriDance`));
+    client.say(msg.channelName, vary(`TriDance`));
 };
   if (msg.messageText === 'cringe' && cd.fire()) {
     if (i % 2 == 0) client.say(msg.channelName, `${msg.senderUsername} LUL BWAHAHAHAHHAHAHAHAHHAHAHA`)
