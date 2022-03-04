@@ -105,27 +105,16 @@ client.on("PRIVMSG", (msg) => {
 
   if (msg.senderUsername === 'daumenbot') return;
   if (msg.messageText == `widepeepoHappy` && cd.fire()) {
-    if (i % 2 == 0) client.say(msg.channelName, `widepeepoHappy`)
-    else client.say(msg.channelName, `widepeepoHappy` + " " + "⠀")
-    i++;
+    client.say(msg.channelName, vary(`widepeepoHappy`));
   }
   if (msg.messageText == `TriDance`&&cd.fire()) {
     client.say(msg.channelName, vary(`TriDance`));
 };
   if (msg.messageText === 'cringe' && cd.fire()) {
-    if (i % 2 == 0) client.say(msg.channelName, `${msg.senderUsername} LUL BWAHAHAHAHHAHAHAHAHHAHAHA`)
-    else client.say(msg.channelName, `${msg.senderUsername} LUL BWAHAHAHAHHAHAHAHAHHAHAHA⠀`)
-    i++;
+    client.say(msg.channelName, vary(`${msg.senderUsername} LUL BWAHAHAHAHHAHAHAHAHHAHAHA`));
   }
   if (msg.messageText === ('PogU') && cd.fire()) {
-    if (i % 2 == 0) client.say(msg.channelName, `${msg.senderUsername}, PagChomp Clap`)
-    else client.say(msg.channelName, `${msg.senderUsername}, PagChomp Clap` + " " + "⠀")
-    i++;
-  }
-  if (msg.messageText === 'play roblox' && cd.fire()) {
-    if (i % 2 == 0) client.say(names[2], `FeelsWeirdManW 🤚 ${msg.senderUsername}`)
-    else client.say(names[2], `FeelsWeirdManW 🤚 ${msg.senderUsername}⠀`)
-    i++;
+    client.say(msg.channelName, vary(`${msg.senderUsername}, PagChomp Clap`));
   }
   if (msg.messageText === 'TriHard' && cd.fire()) {
     if (i % 2 == 0) client.say(msg.channelName, `TriHard`)
@@ -134,19 +123,14 @@ client.on("PRIVMSG", (msg) => {
   }
   if (msg.messageText.includes('lebronJAM') && cd.fire()) {
     const jammsg = jam[Math.floor(Math.random() * jam.length)];
-    if (i % 2 == 0) client.say(msg.channelName, jammsg)
-    else client.say(msg.channelName, jammsg + " ")
-    i++;
+    client.say(msg.channelName, vary(jammsg));
   }
   if (msg.messageText.includes('$gn')) {
     if (msg.channelName === 'eiectricevil')
-      // client.say(msg.channelName, 'Hope you have a good night ' + msg.senderUsername + ' Foreheadkiss ❤')
-      client.say(msg.channelName, '$tuck ' + msg.senderUsername + ' Hope you have a good night Foreheadkiss ❤')
+      client.say(msg.channelName, vary('$tuck ' + msg.senderUsername + ' Hope you have a good night Foreheadkiss ❤'))
   }
   if (isAlertEvent(msg) && cd.fire()) {
-    if (i % 2 == 0) client.me(msg.channelName, `pajaSubs 🚨 ALERT`)
-    else client.me(msg.channelName, "pajaSubs 🚨 ALERT ⠀")
-    i++;
+    client.me(msg.channelName, vary(`pajaSubs 🚨 ALERT`));
   }
 })
 
