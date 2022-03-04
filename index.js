@@ -109,7 +109,7 @@ client.on("PRIVMSG", (msg) => {
     else client.say(msg.channelName, `widepeepoHappy` + " " + "⠀")
     i++;
   }
-  if (message == `TriDance`&&cd.fire()) {
+  if (msg == `TriDance`&&cd.fire()) {
     client.say(channel, vary(`TriDance`));
 };
   if (msg.messageText === 'cringe' && cd.fire()) {
@@ -278,3 +278,10 @@ function isAlertEvent(msg) {
     msg.senderUsername == 'pajbot' &&
     msg.messageText.includes('pajaS 🚨 ALERT');
 }
+
+function vary(msg){
+  i++;
+  if(i%2==0) return `${msg} ⠀`;
+  else return `${msg}`;
+}
+
