@@ -71,10 +71,10 @@ let client = new ChatClient({
     releaseTime: 2000,
   },
 });
-
+//lol
 client.connect();
 client.joinAll(channelOptions)
-
+//yo daumen man
 let i = 0;
 let weebC = 0;
 let NaMloop = false;
