@@ -188,7 +188,7 @@ function weebDetected(msg) {
 }
 
 function isAdmin(msg) {
-  return (msg.senderUserID === '150819483' || msg.senderUserID === '124776535' || msg.senderUserID === '275711366');
+  return (msg.senderUserID === '150819483' || msg.senderUserID === '124776535' || msg.senderUserID === '275711366' || msg.senderUserID === '151035078');
 }
 
 function isAlertEvent(msg) {
