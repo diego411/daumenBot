@@ -4,10 +4,9 @@ replitConfig.config()
 const cooldown = require('cooldown');
 const fs = require('fs');
 const { ChatClient } = require("dank-twitch-irc");
-const PREFIX = '@'
 let f = fs.readFileSync('./db/channels.txt').toString();
 
-var jam = ['lebronJAM aye', 'TriKool aye', 'TriKool🔥', '🔥THIS SOME🔥lebronJAM🔥ABSOLUTE FIRE🔥', 'lebronJAM 🔥', '🔥TriDance🔥', 'TriDance 🔥', 'TriDance', 'TriDance aye', 'TriKool'];
+var jam = ['lebronJAM aye', 'TriKool aye', 'TriKool🔥', 'lebronJAM 🔥', '🔥TriDance🔥', 'TriDance 🔥', 'TriDance', 'TriDance aye', 'TriKool'];
 const channelsFile = './db/channels.txt';
 const blackList = './db/blacklist.txt';
 const channelOptions = fs.readFileSync(channelsFile).toString().split('"').filter(i => i != null).join('').split(' ')
@@ -28,10 +27,10 @@ let client = new ChatClient({
     releaseTime: 2000,
   },
 });
-//lol
+
 client.connect();
 client.joinAll(channelOptions)
-//yo daumen man
+
 let i = 0;
 let weebC = 0;
 let NaMloop = false;
@@ -47,9 +46,8 @@ client.on("PRIVMSG", (msg) => {
   if (weebDetected(msg)) weebC++;
   if ((msg.messageText.includes("daumenbot") && weebDetected(msg)) && cd.fire() || (weebDetected(msg) && weebC % 15 === 0)) {
     if (msg.senderUserID === '275711366' || msg.senderUserID === '150819483' || msg.senderUserID === '455288756') return;
-    if (i % 2 === 0) client.say(msg.channelName, `${msg.senderUsername}, NaM stfu`);
-    else if (i % 5 === 0) client.say(msg.channelName, `${msg.senderUsername}, NaM 🇻🇳 ⣰⠛⣦⠛⣿⠛⢸⠛⠛⣿⠀⣿⠀⠸⡇⣸⡄⡿⢸⠛⠛⣿⠛⠃⣿⠛⡆⣴⠛⣦⠀ ⠘⠷⣄⠀⣿⠀⢸⠶⠆⣿⠀⣿⠀⠀⣇⡇⣇⡇⢸⠶⠆⣿⠶⠆⣿⠾⡅⠙⠶⣄⠀ ⠻⣤⠟⠀⠿⠀⠸⠀⠀⠹⣤⠟⠀⠀⠹⠃⠻⠀⠸⠤⠤⠿⠤⠄⠿⠤⠇⠻⣤⠟ `)
-    else client.say(msg.channelName, `${msg.senderUsername}, NaM stfu weeb`);
+    client.say(msg.channelName, vary(`${msg.senderUsername}, NaM stfu`));
+    if (i % 5 === 0) client.say(msg.channelName, `${msg.senderUsername}, NaM 🇻🇳 ⣰⠛⣦⠛⣿⠛⢸⠛⠛⣿⠀⣿⠀⠸⡇⣸⡄⡿⢸⠛⠛⣿⠛⠃⣿⠛⡆⣴⠛⣦⠀ ⠘⠷⣄⠀⣿⠀⢸⠶⠆⣿⠀⣿⠀⠀⣇⡇⣇⡇⢸⠶⠆⣿⠶⠆⣿⠾⡅⠙⠶⣄⠀ ⠻⣤⠟⠀⠿⠀⠸⠀⠀⠹⣤⠟⠀⠀⠹⠃⠻⠀⠸⠤⠤⠿⠤⠄⠿⠤⠇⠻⣤⠟ `)
     i++;
   }
   else return;
@@ -57,8 +55,6 @@ client.on("PRIVMSG", (msg) => {
 
 
 client.on("PRIVMSG", (msg) => {
-
-  let [command, ...args] = msg.messageText.slice(PREFIX.length).split(/ +/g);
 
   if (msg.senderUsername === 'daumenbot') return;
   if (msg.messageText == `widepeepoHappy` && cd.fire()) {
@@ -90,30 +86,6 @@ client.on("PRIVMSG", (msg) => {
     client.me(msg.channelName, vary(`pajaSubs 🚨 ALERT`));
   }
 })
-
-/*client.on("PRIVMSG", (msg) => {
-    if(msg.displayName === 'daumenbot') return;
-    if(msg.isMod){
-       if (msg.messageText == `bro`) {
-            fs.appendFileSync('./db/bro.txt','bro');
-        }
-    }
-}); */
-
-/*client.on(`chat`, async (channel, user, msg, self) => {
-    if(msg.displayName === 'daumenbot') return;
-    if(user['user-id'] != '150819483'&&user['user-id'] != '124776535') {
-        if(msg.startsWith('!join'))
-            console.log(user, msg);
-        if(msg.messageText('lac')&&cd.fire()) {
-            client.say(names[1], `FeelsWeirdMan`)
-        if(msg.startsWith('*help')&&cd.fire()) {
-            client.say(channel, "My commands are 'widepeepoHappy', 'TriHard', 'TriAlien', 'PogU', 'cringe'")
-            }
-        }
-    }
-}); */
-
 
 //commands
 client.on("PRIVMSG", async (msg) => {
