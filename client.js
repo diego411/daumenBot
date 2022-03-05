@@ -1,7 +1,8 @@
 const { ChatClient } = require("dank-twitch-irc");
+const mySecret = process.env['OAUTH']
 let client = new ChatClient({
     username: `daumenbot`,
-    password: `oauth:jvecqvn83vdoh7kq7i9ipyxh35yum9`,
+    password: mySecret,
     maxChannelCountPerConnection: 10,
     connectionRateLimits: {
         parallelConnections: 20,
