@@ -18,7 +18,7 @@ const pyramidcd = new cooldown(15000);
 let client = new ChatClient({
 
   username: `daumenbot`,
-  password: `oauth:ql53i0xwhxdoalefhwr8tacdw0jntc`,
+  password: ``,
 
   maxChannelCountPerConnection: 10,
 
