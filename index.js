@@ -1,6 +1,7 @@
 const replitConfig = require('./replitConfig')
 replitConfig.config()
 
+const mySecret = process.env['OAUTH']
 const cooldown = require('cooldown');
 const fs = require('fs');
 const { ChatClient } = require("dank-twitch-irc");
@@ -18,7 +19,7 @@ const pyramidcd = new cooldown(15000);
 let client = new ChatClient({
 
   username: `daumenbot`,
-  password: `oauth:ql53i0xwhxdoalefhwr8tacdw0jntc`,
+  password: OAUTH,
 
   maxChannelCountPerConnection: 10,
 
