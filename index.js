@@ -1,54 +1,11 @@
-//const http = require('http');
-// http.createServer((_, res) => {
-//   res.end("Alive!")
-// }).listen(8080)
-const express = require('express')
-const app = express()
-const port = 8080;
-
-var readline = require('readline');
-
-var rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-app.use(express.text())
-
-app.get('/', (req, res) => {
-  res.end('Alive!')
-})
-
-app.post('/refresh', async (req, res) => {
-  console.log("repl.deploy" + req.body + req.header("Signature"))
-
-  const result = JSON.parse((await getStdinLine()))
-
-  res.statusCode = await result.status
-  res.end(await result.body)
-
-  console.log("repl.deploy-success")
-})
-
-app.listen(port, () => {
-
-})
-
-async function getStdinLine() {
-  for await (const line of rl) {
-    return line
-  }
-}
-
+const replitConfig = require('./replitConfig')
+replitConfig.config()
 
 const cooldown = require('cooldown');
 const fs = require('fs');
 const { ChatClient } = require("dank-twitch-irc");
 const PREFIX = '@'
 let f = fs.readFileSync('./db/channels.txt').toString();
-let names = f.split(" ");
-names[1] = "ii_dee";
-names[2] = "ninr"
 
 var jam = ['lebronJAM aye', 'TriKool aye', 'TriKool🔥', '🔥THIS SOME🔥lebronJAM🔥ABSOLUTE FIRE🔥', 'lebronJAM 🔥', '🔥TriDance🔥', 'TriDance 🔥', 'TriDance', 'TriDance aye', 'TriKool'];
 const channelsFile = './db/channels.txt';
@@ -107,9 +64,9 @@ client.on("PRIVMSG", (msg) => {
   if (msg.messageText == `widepeepoHappy` && cd.fire()) {
     client.say(msg.channelName, vary(`widepeepoHappy`));
   }
-  if (msg.messageText == `TriDance`&&cd.fire()) {
+  if (msg.messageText == `TriDance` && cd.fire()) {
     client.say(msg.channelName, vary(`TriDance`));
-};
+  };
   if (msg.messageText === 'cringe' && cd.fire()) {
     client.say(msg.channelName, vary(`${msg.senderUsername} LUL BWAHAHAHAHHAHAHAHAHHAHAHA`));
   }
@@ -263,9 +220,9 @@ function isAlertEvent(msg) {
     msg.messageText.includes('pajaS 🚨 ALERT');
 }
 
-function vary(msg){
+function vary(msg) {
   i++;
-  if(i%2==0) return `${msg} ⠀`;
+  if (i % 2 == 0) return `${msg} ⠀`;
   else return `${msg}`;
 }
 
