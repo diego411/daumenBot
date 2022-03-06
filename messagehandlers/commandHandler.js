@@ -62,14 +62,14 @@ const handle = async (msg, client) => {
     }
     else if (command === "blacklist" && isAdmin(msg)) {
         let weebMap = await db.get('weebMap')
-        let firstChar = args[0].charAt(0)
+        let firstChar = args[0].charAt(0).toLowerCase()
         if (weebMap[firstChar] != null) {
             weebMap[firstChar].push(args[0])
             await db.set('weebMap', weebMap)
             client.say(msg.channelName, `added ${args[0]} to blacklist`);
             logger.log(`added ${args[0]} to blacklist`)
         } else {
-            client.say(`cant add ${args[0]} to blacklist (prob not an emote)`)
+            client.say(msg.channelName, `cant add ${args[0]} to blacklist (prob not an emote)`)
         }
     }
     else if (command === "removeblacklist" && isAdmin(msg)) {
