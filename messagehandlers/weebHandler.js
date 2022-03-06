@@ -1,6 +1,3 @@
-const fs = require('fs');
-const blackList = './db/blacklist.txt';
-
 const logger = require('../logger')
 
 let db;

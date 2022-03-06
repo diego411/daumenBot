@@ -1,11 +1,6 @@
 const logger = require('../logger')
-const channelsFile = './db/channels.txt';
-const blackList = './db/blacklist.txt';
 
 const weebHandler = require('./weebHandler')
-
-const fs = require('fs');
-const { decodeValue } = require('dank-twitch-irc');
 
 const PREFIX = '+'
 let db;
