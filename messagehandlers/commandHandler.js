@@ -7,6 +7,11 @@ const weebHandler = require('./weebHandler')
 const fs = require('fs');
 
 const PREFIX = '+'
+let db;
+
+const init = (database) => {
+    db = database
+}
 
 const handle = (msg, client) => {
     //commands
@@ -15,22 +20,20 @@ const handle = (msg, client) => {
     let [command, ...args] = msg.messageText.slice(PREFIX.length).split(/ +/g);
 
     if (command === "join" && isAdmin(msg)) {
-        fs.appendFileSync(channelsFile, " " + args[0]);
-        client.join(args[0])
-        client.say(msg.channelName, "joined " + args[0]);
+        db.get('channels').then((channels) => {
+            db.set('channels', [...channels, args[0]])
+            client.join(args[0])
+            client.say(msg.channelName, `joined  + ${args[0]}`);
+            logger.log(`joined ${args[0]}`)
+        })
     }
     if (command === "part" && isAdmin(msg)) {
-        let name = args[0];
-        let s = fs.readFileSync(channelsFile).toString();
-        s = s.split(" ");
-        for (let k = 0; k < s.length; k++) {
-            if (s[k] === name) {
-                s.splice(k);
-            }
-        }
-        fs.writeFileSync(channelsFile, s.toString());
-        client.part(name);
-        client.say(msg.channelName, "left" + name);
+        db.get('channels').then((channels) => {
+            db.set('channels', channels.filter(channel => channel !== args[0]))
+            client.part(args[0])
+            client.say(msg.channelName, `left ${args[0]}`)
+            logger.log(`left ${args[0]}`)
+        })
     }
     if (command === 'quit' && isAdmin(msg)) {
         client.say(msg.channelName, 'quitting').then(() => {
@@ -66,8 +69,9 @@ const handle = (msg, client) => {
         fs.appendFileSync(blackList, " " + args[0]);
     }
     if (command === "channellist") {
-        let s = fs.readFileSync(channelsFile).toString();
-        client.say(msg.channelName, s);
+        db.get('channels').then((channels) => {
+            client.say(msg.channelName, channels);
+        })
     }
 }
 
@@ -90,3 +94,4 @@ const isCommand = (msg) => {
 
 exports.handle = handle
 exports.isCommand = isCommand
+exports.init = init
