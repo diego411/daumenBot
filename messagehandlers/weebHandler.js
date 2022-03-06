@@ -2,6 +2,7 @@ const fs = require('fs');
 const blackList = './db/blacklist.txt';
 
 let weebC = 0;
+let latestWeebTerm;
 
 const handle = (msg, client) => {
     if (msg.messageText.includes("daumenbot") || weebC % 15 === 0) {
@@ -10,6 +11,7 @@ const handle = (msg, client) => {
         if (rand == 0) client.say(msg.channelName, `${msg.senderUsername}, NaM stfu`);
         if (rand == 1) client.say(msg.channelName, `${msg.senderUsername}, NaM 🇻🇳 ⣰⠛⣦⠛⣿⠛⢸⠛⠛⣿⠀⣿⠀⠸⡇⣸⡄⡿⢸⠛⠛⣿⠛⠃⣿⠛⡆⣴⠛⣦⠀ ⠘⠷⣄⠀⣿⠀⢸⠶⠆⣿⠀⣿⠀⠀⣇⡇⣇⡇⢸⠶⠆⣿⠶⠆⣿⠾⡅⠙⠶⣄⠀ ⠻⣤⠟⠀⠿⠀⠸⠀⠀⠹⣤⠟⠀⠀⠹⠃⠻⠀⠸⠤⠤⠿⠤⠄⠿⠤⠇⠻⣤⠟ `)
         if (rand == 2) client.say(msg.channelName, `${msg.senderUsername}, NaM stfu weeb`);
+        console.log(`NaMed ${msg.senderUsername} for weeb term: ${latestWeebTerm}`)
     }
     weebC++;
 }
@@ -19,7 +21,10 @@ const weebDetected = (msg) => {
     s = s.split(" ");
 
     for (let i = 0; i < s.length; i++) {
-        if (msg.messageText.includes(s[i]) && s[i] != '') return true;
+        if (msg.messageText.includes(s[i]) && s[i] != '') {
+            latestWeebTerm = s[i]
+            return true;
+        }
     }
 
     return false;
