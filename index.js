@@ -15,6 +15,7 @@ const Database = require("@replit/database");
 const db = new Database('https://kv.replit.com/v0/eyJhbGciOiJIUzUxMiIsImlzcyI6ImNvbm1hbiIsImtpZCI6InByb2Q6MSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjb25tYW4iLCJleHAiOjE2NDY3MTAyOTMsImlhdCI6MTY0NjU5ODY5MywiZGF0YWJhc2VfaWQiOiIwMzg0ZGRmOC1iNGIyLTQyYmEtYjhmYi02NmY2YzkzYzZmYTAifQ.WhiraD8eu9SUAvGa9jd-Bgnjzxh4raXB30HDJwRLJHesmGHVUQRbLAcRSvNIMrrFxZF_9pWATXlR0YGfot9K4Q');
 
 commandHandler.init(db)
+weebHandler.init(db)
 
 const client = require('./client');
 
@@ -27,8 +28,8 @@ client.on("close", (error) => {
   }
 });
 
-client.on("PRIVMSG", (msg) => {
-  let msgType = getMsgType(msg)
+client.on("PRIVMSG", async (msg) => {
+  let msgType = await getMsgType(msg)
 
   switch (msgType) {
     case MSGTYPES.COMMAND: {
@@ -47,9 +48,9 @@ client.on("PRIVMSG", (msg) => {
   }
 })
 
-const getMsgType = (msg) => {
+const getMsgType = async (msg) => {
   if (commandHandler.isCommand(msg)) return MSGTYPES.COMMAND
-  if (weebHandler.weebDetected(msg)) return MSGTYPES.WEEBMSG
+  if (await weebHandler.weebDetected(msg)) return MSGTYPES.WEEBMSG
   if (isEvent(msg)) return MSGTYPES.EVENT
   return MSGTYPES.NONE
 }
