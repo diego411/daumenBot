@@ -4,6 +4,7 @@
   "description": "",
   "main": "bot.js",
   "dependencies": {
+    "@replit/database": "^2.0.1",
     "cooldown": "^0.2.0",
     "dank-twitch-irc": "^4.3.0",
     "dotenv": "^16.0.0",
