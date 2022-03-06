@@ -2,6 +2,8 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
+const logger = require('./logger')
+
 const commandHandler = require('./messagehandlers/commandHandler')
 const weebHandler = require('./messagehandlers/weebHandler')
 const eventHandler = require('./messagehandlers/eventHandler')
@@ -12,10 +14,10 @@ replitConfig.config()
 const client = require('./client')
 client.init()
 
-client.on("ready", () => console.log('Online'));
+client.on("ready", () => logger.log('Online'));
 client.on("close", (error) => {
   if (error != null) {
-    console.error("Client closed due to error", error);
+    logger.error("Client closed due to error", error);
   }
 });
 
