@@ -1,13 +1,17 @@
 const channelsFile = './db/channels.txt';
 const blackList = './db/blacklist.txt';
 
+const weebHandler = require('./weebHandler')
+
 const fs = require('fs');
+
+const PREFIX = '+'
 
 const handle = (msg, client) => {
     //commands
     if (msg.displayName === 'daumenbot') return;
 
-    let [command, ...args] = msg.messageText.slice(1).split(/ +/g);
+    let [command, ...args] = msg.messageText.slice(PREFIX.length).split(/ +/g);
 
     if (command === "join" && isAdmin(msg)) {
         fs.appendFileSync(channelsFile, " " + args[0]);
@@ -33,7 +37,7 @@ const handle = (msg, client) => {
         })
     }
     if (command === "pyramid" && (msg.isMod) || (msg.isModRaw)) {
-        if (weebDetected(msg)) client.say(msg.channelName, "No, I don't think so")
+        if (weebHandler.weebDetected(msg)) client.say(msg.channelName, "No, I don't think so")
         else {
             let emote = args[1];
             let n = args[0];
@@ -78,15 +82,10 @@ function isAdmin(msg) {
     return (msg.senderUserID === '150819483' || msg.senderUserID === '124776535' || msg.senderUserID === '275711366');
 }
 
-function weebDetected(msg) {
-    let s = fs.readFileSync(blackList).toString();
-    s = s.split(" ");
-
-    for (let i = 0; i < s.length; i++) {
-        if (msg.messageText.includes(s[i]) && s[i] != '') return true;
-    }
-
-    return false;
+const isCommand = (msg) => {
+    if (msg.messageText.charAt(0) === PREFIX) return true;
+    else return false;
 }
 
 exports.handle = handle
+exports.isCommand = isCommand

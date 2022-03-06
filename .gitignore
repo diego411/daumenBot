@@ -3,3 +3,4 @@ package-lock.json
 LICENSE.md
 README.md
 db/bro
+.env

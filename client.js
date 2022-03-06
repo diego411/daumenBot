@@ -27,6 +27,10 @@ const say = (channel, msgText) => {
     if (cd.fire()) client.say(channel, vary(msgText))
 }
 
+const me = (channel, msgText) => {
+    if (cd.fire()) client.me(channel, vary(msgText))
+}
+
 const on = (event, func) => {
     client.on(event, func)
 }
@@ -47,6 +51,7 @@ function vary(msgText) {
 
 exports.init = init
 exports.say = say
+exports.me = me
 exports.on = on
 exports.join = join
 exports.part = part
