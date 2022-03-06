@@ -1,3 +1,4 @@
+const logger = require('../logger')
 const channelsFile = './db/channels.txt';
 const blackList = './db/blacklist.txt';
 
@@ -53,7 +54,7 @@ const handle = (msg, client) => {
         }
     }
     if (command === "test") {
-        console.log("test");
+        logger.log("test");
         client.say(msg.channelName, "FeelsDankMan")
     }
     if (command === "say" && isAdmin(msg)) {

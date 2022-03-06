@@ -1,5 +1,7 @@
-const { ChatClient } = require("dank-twitch-irc");
+const logger = require("./logger")
+const { ChatClient } = require("dank-twitch-irc")
 const mySecret = process.env['OAUTH']
+
 let client = new ChatClient({
     username: `daumenbot`,
     password: mySecret,
@@ -9,18 +11,17 @@ let client = new ChatClient({
         releaseTime: 2000,
     },
 });
-let i = 0
-const fs = require('fs');
-const channelsFile = './db/channels.txt';
-const channelOptions = fs.readFileSync(channelsFile).toString().split('"').filter(i => i != null).join('').split(' ')
 
-const cooldown = require('cooldown')
+let i = 0
+
+const cooldown = require('cooldown');
 const cd = new cooldown(2000)
 //const pyramidcd = new cooldown(15000)
 
-const init = () => {
-    client.connect();
-    client.joinAll(channelOptions)
+const init = (channels) => {
+    client.connect()
+    client.joinAll(channels)
+    for (let j = 0; j < channels.length; j++) logger.log(`joined ${channels[j]}`)
 }
 
 const say = (channel, msgText) => {

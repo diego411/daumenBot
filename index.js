@@ -6,13 +6,19 @@ const commandHandler = require('./messagehandlers/commandHandler')
 const weebHandler = require('./messagehandlers/weebHandler')
 const eventHandler = require('./messagehandlers/eventHandler')
 
+const logger = require('./logger');
+
 const replitConfig = require('./replitConfig')
 replitConfig.config()
 
-const client = require('./client')
-client.init()
+const Database = require("@replit/database");
+const db = new Database('https://kv.replit.com/v0/eyJhbGciOiJIUzUxMiIsImlzcyI6ImNvbm1hbiIsImtpZCI6InByb2Q6MSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjb25tYW4iLCJleHAiOjE2NDY3MTAyOTMsImlhdCI6MTY0NjU5ODY5MywiZGF0YWJhc2VfaWQiOiIwMzg0ZGRmOC1iNGIyLTQyYmEtYjhmYi02NmY2YzkzYzZmYTAifQ.WhiraD8eu9SUAvGa9jd-Bgnjzxh4raXB30HDJwRLJHesmGHVUQRbLAcRSvNIMrrFxZF_9pWATXlR0YGfot9K4Q');
 
-client.on("ready", () => console.log('Online'));
+const client = require('./client');
+
+db.get('channels').then(client.init)
+
+client.on("ready", () => logger.log('Online'));
 client.on("close", (error) => {
   if (error != null) {
     console.error("Client closed due to error", error);
