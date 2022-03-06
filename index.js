@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 const commandHandler = require('./messagehandlers/commandHandler')
 const weebHandler = require('./messagehandlers/weebHandler')
 const eventHandler = require('./messagehandlers/eventHandler')
