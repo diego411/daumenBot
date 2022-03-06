@@ -1,3 +1,6 @@
+const fs = require('fs');
+const blackList = './db/blacklist.txt';
+
 let weebC = 0;
 
 const handle = (msg, client) => {
@@ -11,4 +14,16 @@ const handle = (msg, client) => {
     weebC++;
 }
 
+const weebDetected = (msg) => {
+    let s = fs.readFileSync(blackList).toString();
+    s = s.split(" ");
+
+    for (let i = 0; i < s.length; i++) {
+        if (msg.messageText.includes(s[i]) && s[i] != '') return true;
+    }
+
+    return false;
+}
+
 exports.handle = handle
+exports.weebDetected = weebDetected

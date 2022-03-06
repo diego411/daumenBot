@@ -5,13 +5,8 @@ const eventHandler = require('./messagehandlers/eventHandler')
 const replitConfig = require('./replitConfig')
 replitConfig.config()
 
-const fs = require('fs');
-const blackList = './db/blacklist.txt';
-
 const client = require('./client')
 client.init()
-
-const PREFIX = '+'
 
 client.on("ready", () => console.log('Online'));
 client.on("close", (error) => {
@@ -22,7 +17,6 @@ client.on("close", (error) => {
 
 client.on("PRIVMSG", (msg) => {
   let msgType = getMsgType(msg)
-  console.log(msgType)
 
   switch (msgType) {
     case MSGTYPES.COMMAND: {
@@ -42,8 +36,8 @@ client.on("PRIVMSG", (msg) => {
 })
 
 const getMsgType = (msg) => {
-  if (isCommand(msg)) return MSGTYPES.COMMAND
-  if (weebDetected(msg)) return MSGTYPES.WEEBMSG
+  if (commandHandler.isCommand(msg)) return MSGTYPES.COMMAND
+  if (weebHandler.weebDetected(msg)) return MSGTYPES.WEEBMSG
   if (isEvent(msg)) return MSGTYPES.EVENT
   return MSGTYPES.NONE
 }
@@ -55,23 +49,7 @@ const MSGTYPES = {
   NONE: 3
 }
 
-function isCommand(msg) {
-  if (msg.messageText.charAt(0) === PREFIX) return true;
-  else return false;
-}
-
 //TODO
 function isEvent(msg) {
   return true;
-}
-
-function weebDetected(msg) {
-  let s = fs.readFileSync(blackList).toString();
-  s = s.split(" ");
-
-  for (let i = 0; i < s.length; i++) {
-    if (msg.messageText.includes(s[i]) && s[i] != '') return true;
-  }
-
-  return false;
 }
