@@ -17,7 +17,7 @@ const handle = (msg, client) => {
         if (rand == 0) client.say(msg.channelName, `${msg.senderUsername}, NaM stfu`);
         if (rand == 1) client.say(msg.channelName, `${msg.senderUsername}, NaM 🇻🇳 ⣰⠛⣦⠛⣿⠛⢸⠛⠛⣿⠀⣿⠀⠸⡇⣸⡄⡿⢸⠛⠛⣿⠛⠃⣿⠛⡆⣴⠛⣦⠀ ⠘⠷⣄⠀⣿⠀⢸⠶⠆⣿⠀⣿⠀⠀⣇⡇⣇⡇⢸⠶⠆⣿⠶⠆⣿⠾⡅⠙⠶⣄⠀ ⠻⣤⠟⠀⠿⠀⠸⠀⠀⠹⣤⠟⠀⠀⠹⠃⠻⠀⠸⠤⠤⠿⠤⠄⠿⠤⠇⠻⣤⠟ `)
         if (rand == 2) client.say(msg.channelName, `${msg.senderUsername}, NaM stfu weeb`);
-        logger.log(`NaMed ${msg.senderUsername} for weeb term: ${latestWeebTerm}`)
+        logger.log(`NaMed ${msg.senderUsername} for weeb term: ${latestWeebTerm} in ${msg.channelName}`)
     }
     weebC++;
 }
