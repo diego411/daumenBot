@@ -23,6 +23,9 @@ const client = require('./client');
 if (process.env.NODE_ENV !== 'production') db.get('debugchannels').then(client.init)
 else db.get('channels').then(client.init)
 
+const gmvn = require('./gmvn')
+gmvn.startNamJob(client, db)
+
 client.on("ready", () => logger.log('Online'));
 client.on("close", (error) => {
   if (error != null) {
