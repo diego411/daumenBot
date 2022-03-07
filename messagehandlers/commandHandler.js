@@ -36,6 +36,9 @@ const handle = async (msg, client) => {
             process.exit(1);
         })
     }
+    else if (msg.messageText === 'map'&&isAdmin()) {
+        db.get('weebMap').then(console.log) 
+    }
     else if (command === "pyramid" && ((msg.isMod) || (msg.isModRaw))) {
         if (await weebHandler.weebDetected(msg)) client.say(msg.channelName, "No, I don't think so")
         else {
