@@ -36,7 +36,7 @@ const handle = async (msg, client) => {
             process.exit(1);
         })
     }
-    else if (msg.messageText === 'map'&&isAdmin()) {
+    else if (command === 'map'&&isAdmin()) {
         db.get('weebMap').then(console.log) 
     }
     else if (command === "pyramid" && ((msg.isMod) || (msg.isModRaw))) {
