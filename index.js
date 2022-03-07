@@ -1,12 +1,13 @@
+const logger = require('./logger');
+
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
+  logger.log("Running in debug mode")
 }
 
 const commandHandler = require('./messagehandlers/commandHandler')
 const weebHandler = require('./messagehandlers/weebHandler')
 const eventHandler = require('./messagehandlers/eventHandler')
-
-const logger = require('./logger');
 
 const replitConfig = require('./replitConfig')
 replitConfig.config()
@@ -19,7 +20,8 @@ weebHandler.init(db)
 
 const client = require('./client');
 
-db.get('channels').then(client.init)
+if (process.env.NODE_ENV !== 'production') db.get('debugchannels').then(client.init)
+else db.get('channels').then(client.init)
 
 client.on("ready", () => logger.log('Online'));
 client.on("close", (error) => {
