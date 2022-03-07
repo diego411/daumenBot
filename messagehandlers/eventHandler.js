@@ -25,9 +25,6 @@ const handle = (msg, client) => {
     if (isAlertEvent(msg)) {
         client.me(msg.channelName, `pajaSubs 🚨 ALERT`);
     }
-    if (msg.messageText === 'map'&&isAdmin()) {
-        db.get('weebMap').then(console.log) 
-    }
 
 }
 
