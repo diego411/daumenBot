@@ -2,6 +2,9 @@ var jam = ['lebronJAM aye', 'TriKool aye', 'TriKool🔥', '🔥THIS SOME🔥lebr
 
 const handle = (msg, client) => {
     if (msg.senderUsername === 'daumenbot') return;
+    if (msg.messageText == '!daumenbot') {
+        client.say(msg.channelName, `This bot nams the weebs xd. Contact @daumenloser or @yagnesh`)
+    }
     if (msg.messageText == `widepeepoHappy`) {
         client.say(msg.channelName, `widepeepoHappy`);
     }
