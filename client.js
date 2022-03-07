@@ -25,11 +25,23 @@ const init = (channels) => {
 }
 
 const say = (channel, msgText) => {
-    if (cd.fire()) client.say(channel, vary(msgText))
+    if (cd.fire()) {
+        try {
+            client.say(channel, vary(msgText))
+        } catch (e) {
+            logger.log(e)
+        }
+    }
 }
 
 const me = (channel, msgText) => {
-    if (cd.fire()) client.me(channel, vary(msgText))
+    if (cd.fire()) {
+        try {
+            client.me(channel, vary(msgText))
+        } catch (e) {
+            logger.log(e)
+        }
+    }
 }
 
 const on = (event, func) => {
