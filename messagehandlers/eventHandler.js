@@ -2,7 +2,11 @@ var jam = ['lebronJAM aye', 'TriKool aye', 'TriKool🔥', '🔥THIS SOME🔥lebr
 
 const handle = (msg, client) => {
     if (msg.senderUsername === 'daumenbot') return;
+<<<<<<< HEAD
     if (msg.messageText == '!daumenbot' || msg.messageText == '+about' || msg.messageText == '+help') {
+=======
+    if (msg.messageText == '+daumenbot' || msg.messageText == '+about' || msg.messageText == '+help') {
+>>>>>>> 7d58aa849eb2492f794370fe761f3c5abee643ea
         client.say(msg.channelName, `This bot nams the weebs xd. Contact @daumenloser or @yagnesh`)
     }
     if (msg.messageText === 'TriHard') {
