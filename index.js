@@ -13,7 +13,10 @@ const replitConfig = require('./replitConfig')
 replitConfig.config()
 
 const Database = require("@replit/database");
-const db = new Database(process.env["DB_URL"]);
+let db;
+
+if (process.env.NODE_ENV !== 'production') db = new Database(process.env["DB_URL"])
+else db = new Database();
 
 commandHandler.init(db)
 weebHandler.init(db)
