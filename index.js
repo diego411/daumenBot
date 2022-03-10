@@ -23,6 +23,7 @@ weebHandler.init(db)
 
 const client = require('./client');
 
+logger.log(process.env["OAUTH"])
 if (process.env.NODE_ENV !== 'production') db.get('debugchannels').then(client.init)
 else db.get('channels').then(client.init)
 
