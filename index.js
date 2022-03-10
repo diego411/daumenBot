@@ -21,7 +21,20 @@ else db = new Database();
 commandHandler.init(db)
 weebHandler.init(db)
 
-const client = require('./client');
+//const client = require('./client');
+
+let client = new ChatClient({
+  username: `daumenbot`,
+  password: mySecret,
+  maxChannelCountPerConnection: 10,
+  connectionRateLimits: {
+    parallelConnections: 20,
+    releaseTime: 2000,
+  },
+});
+
+client.connect()
+
 
 if (process.env.NODE_ENV !== 'production') db.get('debugchannels').then(client.init)
 else db.get('channels').then(client.init)
