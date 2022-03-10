@@ -31,7 +31,7 @@ const handle = (msg, client) => {
             if (rand == 2) client.say(msg.channelName, `${msg.senderUsername}, NaM stfu weeb`);
             logger.log(`NaMed ${msg.senderUsername} for weeb term: ${latestWeebTerm} in ${msg.channelName}`)
         }
-        db.get('forsenPuke').then(puke => db.set('forsenPuke', puke + 1))
+        //db.get('forsenPuke').then(puke => db.set('forsenPuke', puke + 1))
         puke++;
     }
 }
