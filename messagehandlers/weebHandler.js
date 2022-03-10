@@ -13,7 +13,7 @@ const init = (database) => {
 
 const handle = (msg, client) => {
     if (msg.displayName === 'daumenbot') return;
-    if (msg.channelName != 'yagnesh') {
+    if (msg.channelName != 'forsen') {
         if (msg.messageText.includes("daumenbot") || weebC % 25 === 0) {
             if (msg.senderUserID === '275711366'|| msg.senderUserID === '455288756') return;
             let rand = Math.floor(Math.random() * 3)
