@@ -22,6 +22,8 @@ commandHandler.init(db)
 weebHandler.init(db)
 
 //const client = require('./client');
+const { ChatClient } = require("dank-twitch-irc")
+const mySecret = process.env['OAUTH']
 
 let client = new ChatClient({
   username: `daumenbot`,
