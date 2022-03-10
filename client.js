@@ -19,8 +19,9 @@ const cd = new cooldown(2000)
 //const pyramidcd = new cooldown(15000)
 
 const init = (channels) => {
-    console.log(channels);
+    console.log(client);
     client.connect()
+    console.log(client)
     client.joinAll(channels)
     for (let j = 0; j < channels.length; j++) logger.log(`joined ${channels[j]}`)
 }
