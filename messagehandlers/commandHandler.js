@@ -39,6 +39,9 @@ const handle = async (msg, client) => {
     else if (command === 'get'&&isAdmin(msg)) {
         db.get(args[0]).then(console.log) 
     }
+    else if (command === 'check'&&isAdmin(msg)) {
+        db.get('forsenPuke').then(forsenPuke => client.say(msg.channelName, forsenPuke)) 
+    }
     else if (command === "pyramid" && ((msg.isMod) || (msg.isModRaw))) {
         if (await weebHandler.weebDetected(msg)) client.say(msg.channelName, "No, I don't think so")
         else {
