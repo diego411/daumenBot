@@ -21,28 +21,13 @@ else db = new Database();
 commandHandler.init(db)
 weebHandler.init(db)
 
-//const client = require('./client');
-const { ChatClient } = require("dank-twitch-irc")
-const mySecret = process.env['OAUTH']
+const client = require('./client');
 
-let client = new ChatClient({
-  username: `daumenbot`,
-  password: mySecret,
-  maxChannelCountPerConnection: 10,
-  connectionRateLimits: {
-    parallelConnections: 20,
-    releaseTime: 2000,
-  },
-});
-
-client.connect()
-
-console.log("test")
-// if (process.env.NODE_ENV !== 'production') db.get('debugchannels').then(client.init)
-// else db.get('channels').then(client.init)
+if (process.env.NODE_ENV !== 'production') db.get('debugchannels').then(client.init)
+else db.get('channels').then(client.init)
 
 const gmvn = require('./gmvn')
-//gmvn.startNamJob(client, db)
+gmvn.startNamJob(client, db)
 
 client.on("ready", () => logger.log('Online'));
 client.on("close", (error) => {
