@@ -4,7 +4,7 @@ const mySecret = process.env['OAUTH']
 
 let client = new ChatClient({
     username: `daumenbot`,
-    password: mySecret,
+    password: `oauth:${mySecret}`,
     maxChannelCountPerConnection: 10,
     connectionRateLimits: {
         parallelConnections: 20,

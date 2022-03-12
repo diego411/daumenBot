@@ -2,6 +2,8 @@ const logger = require('../logger')
 
 const weebHandler = require('./weebHandler')
 
+const twitchapi = require('../twitchapi')
+
 const PREFIX = '+'
 let db;
 
@@ -105,6 +107,14 @@ const handle = async (msg, client) => {
         db.get('channels').then((channels) => {
             client.say(msg.channelName, channels);
         })
+    }
+    else if (command === "uid") {
+        const id = args[0] ? await twitchapi.getUserId(args[0]) : await twitchapi.getUserId(msg.senderUsername)
+        client.say(msg.channelName, `@${msg.senderUsername} ${id}`)
+    }
+    else if (command === "isLive") {
+        const isLive = await twitchapi.isLive(args[0])
+        client.say(msg.channelName, isLive)
     }
 }
 

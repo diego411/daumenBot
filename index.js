@@ -18,6 +18,8 @@ let db;
 if (process.env.NODE_ENV !== 'production') db = new Database(process.env["DB_URL"])
 else db = new Database();
 
+//db.set("debugchannels", [{ channel: "yagnesh", spam: "LOW", talkInOnline: false }])
+
 commandHandler.init(db)
 weebHandler.init(db)
 
