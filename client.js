@@ -15,17 +15,23 @@ let client = new ChatClient({
 let i = 0
 
 const cooldown = require('cooldown');
-const cd = new cooldown(2000)
+const { channel } = require("tmi.js/lib/utils");
+
+let cd = {};
+//const cd = new cooldown(2000)
 //const pyramidcd = new cooldown(15000)
 
 const init = (channels) => {
     client.connect()
     client.joinAll(channels)
-    for (let j = 0; j < channels.length; j++) logger.log(`joined ${channels[j]}`)
+    for (let j = 0; j < channels.length; j++) {
+        cd[channels[j]] = new cooldown(2000)
+        logger.log(`joined ${channels[j]}`)
+    }
 }
 
 const say = (channel, msgText) => {
-    if (cd.fire()) {
+    if (cd[channel].fire()) {
         try {
             client.say(channel, vary(msgText))
         } catch (e) {
@@ -34,8 +40,16 @@ const say = (channel, msgText) => {
     }
 }
 
+const sayEverywhere = (channels, msgText) => {
+    channels.map(channel => say(channel, msgText))
+}
+
+const meEverywhere = (channels, msgText) => {
+    channels.map(channel => me(channel, msgText))
+}
+
 const me = (channel, msgText) => {
-    if (cd.fire()) {
+    if (cd[channel].fire()) {
         try {
             client.me(channel, vary(msgText))
         } catch (e) {
@@ -50,10 +64,12 @@ const on = (event, func) => {
 
 const join = (channel) => {
     client.join(channel)
+    cd[channel] = new cooldown(2000)
 }
 
 const part = (channel) => {
     client.part(channel)
+    delete cd[channel]
 }
 
 function vary(msgText) {
@@ -64,6 +80,8 @@ function vary(msgText) {
 
 exports.init = init
 exports.say = say
+exports.sayEverywhere = sayEverywhere
+exports.meEverywhere = meEverywhere
 exports.me = me
 exports.on = on
 exports.join = join

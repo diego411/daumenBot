@@ -11,16 +11,12 @@ const startNamJob = (c, database) => {
         logger.log("GFM VIETNAM");
         if (process.env.NODE_ENV !== 'production') {
             db.get('debugchannels').then(channels => {
-                for (let i = 0; i <= channels.length; i++) {
-                    client.me(channels[i], "GOOD FUCKING MORNING VIETNAM NaM 🇻🇳 ");
-                }
+                client.meEverywhere(channels, "GOOD FUCKING MORNING VIETNAM NaM 🇻🇳 ")
             })
         }
         else {
             db.get('channels').then(channels => {
-                for (let i = 0; i <= channels.length; i++) {
-                    client.me(channels[i], "GOOD FUCKING MORNING VIETNAM NaM 🇻🇳 ");
-                }
+                client.meEverywhere(channels, "GOOD FUCKING MORNING VIETNAM NaM 🇻🇳 ")
             })
         }
     }, null, true, 'Asia/Pontianak');

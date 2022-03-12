@@ -36,11 +36,11 @@ const handle = async (msg, client) => {
             process.exit(1);
         })
     }
-    else if (command === 'get'&&isAdmin(msg)) {
-        db.get(args[0]).then(console.log) 
+    else if (command === 'get' && isAdmin(msg)) {
+        db.get(args[0]).then(console.log)
     }
-    else if (command === 'check'&&isAdmin(msg)) {
-        db.get('forsenPuke').then(forsenPuke => client.say(msg.channelName, forsenPuke)) 
+    else if (command === 'check' && isAdmin(msg)) {
+        db.get('forsenPuke').then(forsenPuke => client.say(msg.channelName, forsenPuke))
     }
     else if (command === "pyramid" && ((msg.isMod) || (msg.isModRaw))) {
         if (await weebHandler.weebDetected(msg)) client.say(msg.channelName, "No, I don't think so")
@@ -65,6 +65,13 @@ const handle = async (msg, client) => {
     else if (command === "say" && isAdmin(msg)) {
         console.log("trihard");
         client.say(msg.channelName, `${args.join(' ')}`);
+    }
+    else if (command === "sayEverywhere" && isAdmin(msg)) {
+        if (process.env.NODE_ENV !== "production") {
+            db.get('debugchannels').then(channels => client.sayEverywhere(channels, args[0]))
+        } else {
+            db.get('channels').then(channels => client.sayEverywhere(channels, args[0]))
+        }
     }
     else if (command === "blacklist" && isAdmin(msg)) {
         let weebMap = await db.get('weebMap')
