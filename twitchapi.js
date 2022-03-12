@@ -23,7 +23,7 @@ exports.getUserId = async (username) => {
 }
 
 exports.isLive = async (username) => {
-    let uid = await this.getId(username)
+    let uid = await this.getUserId(username)
 
     let response = await axios.get(`${HELIX_STREAMS_URL}?user_id=${uid}`, {
         headers: {
