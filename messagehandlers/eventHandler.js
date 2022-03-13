@@ -1,6 +1,6 @@
 var jam = ['lebronJAM aye', 'TriKool aye', 'TriKool🔥', '🔥THIS SOME🔥lebronJAM🔥ABSOLUTE FIRE🔥', 'lebronJAM 🔥', '🔥TriDance🔥', 'TriDance 🔥', 'TriDance', 'TriDance aye', 'TriKool'];
 
-const handle = (msg, client) => {
+const handle = async (msg, client) => {
     if (msg.senderUsername === 'daumenbot') return;
     if (msg.messageText.includes("daumenbot") && msg.messageText.includes("TriHard")) {
         client.say(msg.channelName, `@${msg.senderUsername} TriHard`)

@@ -3,7 +3,7 @@ const CronJob = require('cron').CronJob;
 
 let client;
 let db;
-const startNamJob = (c, database) => {
+const startNamJob = async (c, database) => {
     client = c
     db = database
 

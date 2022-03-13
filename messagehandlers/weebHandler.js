@@ -11,7 +11,7 @@ const init = (database) => {
     db = database
 }
 
-const handle = (msg, client) => {
+const handle = async (msg, client) => {
     if (msg.displayName === 'daumenbot') return;
     if (msg.channelName != 'forsen') {
         if (msg.messageText.includes("daumenbot") || weebC % 25 === 0) {

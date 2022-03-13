@@ -2,7 +2,7 @@ const logger = require('../logger')
 
 const weebHandler = require('./weebHandler')
 
-const twitchapi = require('../twitchapi')
+const twitchapi = require('../twitchapi');
 
 const PREFIX = '+'
 let db;
@@ -18,20 +18,43 @@ const handle = async (msg, client) => {
     let [command, ...args] = msg.messageText.slice(PREFIX.length).split(/ +/g);
 
     if (command === "join" && isAdmin(msg)) {
-        db.get('channels').then((channels) => {
-            db.set('channels', [...channels, args[0]])
-            client.join(args[0])
-            client.say(msg.channelName, `joined  + ${args[0]}`);
-            logger.log(`joined ${args[0]}`)
-        })
+        if (args.length == 0) {
+            client.say(msg.channelName, 'please specify a channel to join')
+            return
+        }
+        let config = { channel: args[0] }
+        for (let i = 1; i < args.length; i++) {
+            [key, value] = args[i].split(":")
+            config[key] = value
+        }
+        if (!config["spam"]) config["spam"] = "LOW"
+        if (!config["talkInOnline"]) config["talkInOnline"] = false
+        if (!config["weebFilter"]) config["weebFilter"] = "OFF"
+        if (process.env.NODE_ENV !== "production") {
+            db.get('debugchannels').then(channels => db.set('debugchannels', [...channels, config]))
+        } else {
+            db.get('channels').then(channels => db.set('channels', [...channels, config]))
+        }
+        client.join(config)
+        client.say(msg.channelName, `joined ${args[0]}`);
+        logger.log(`joined ${args[0]}`)
     }
     else if (command === "part" && isAdmin(msg)) {
-        db.get('channels').then((channels) => {
-            db.set('channels', channels.filter(channel => channel !== args[0]))
-            client.part(args[0])
-            client.say(msg.channelName, `left ${args[0]}`)
-            logger.log(`left ${args[0]}`)
-        })
+        if (process.env.NODE_ENV !== "production") {
+            db.get('debugchannels').then((channels) => {
+                db.set('debugchannels', channels.filter(channel => channel.channel !== args[0]))
+                client.part(args[0])
+                client.say(msg.channelName, `left ${args[0]}`)
+                logger.log(`left ${args[0]}`)
+            })
+        } else {
+            db.get('channels').then((channels) => {
+                db.set('channels', channels.filter(channel => channel.channel !== args[0]))
+                client.part(args[0])
+                client.say(msg.channelName, `left ${args[0]}`)
+                logger.log(`left ${args[0]}`)
+            })
+        }
     }
     else if (command === 'quit' && isAdmin(msg)) {
         client.say(msg.channelName, 'quitting').then(() => {
@@ -104,9 +127,13 @@ const handle = async (msg, client) => {
         }
     }
     else if (command === "channellist") {
-        db.get('channels').then((channels) => {
-            client.say(msg.channelName, channels);
-        })
+        let channelconfigs = process.env.NODE_ENV === "production" ? await db.get('channels') : await db.get('debugchannels')
+        let channels = "";
+        for (cc of channelconfigs) {
+            console.log(cc)
+            channels += `${cc.channel}, `
+        }
+        client.say(msg.channelName, channels)
     }
     else if (command === "uid") {
         const id = args[0] ? await twitchapi.getUserId(args[0]) : await twitchapi.getUserId(msg.senderUsername)
