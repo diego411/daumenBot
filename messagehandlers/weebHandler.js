@@ -3,7 +3,6 @@ const cooldown = require('cooldown');
 const weebcd = new cooldown(1000000)
 let db;
 
-let puke = 0;
 let weebC = 0;
 let latestWeebTerm;
 
@@ -11,29 +10,34 @@ const init = (database) => {
     db = database
 }
 
+const weebCDMap = {
+    "ON": 15,
+    "LOW": 25,
+    "VERY LOW": 50,
+    "ULTRA LOW": 100
+}
+
 const handle = async (msg, client) => {
     if (msg.displayName === 'daumenbot') return;
-    if (msg.channelName != 'forsen') {
-        if (msg.messageText.includes("daumenbot") || weebC % 25 === 0) {
-            if (msg.senderUserID === '275711366' || msg.senderUserID === '455288756') return;
-            let rand = Math.floor(Math.random() * 3)
-            if (rand == 0) client.say(msg.channelName, `${msg.senderUsername}, NaM stfu`);
-            if (rand == 1) client.say(msg.channelName, `${msg.senderUsername}, NaM 🇻🇳 ⣰⠛⣦⠛⣿⠛⢸⠛⠛⣿⠀⣿⠀⠸⡇⣸⡄⡿⢸⠛⠛⣿⠛⠃⣿⠛⡆⣴⠛⣦⠀ ⠘⠷⣄⠀⣿⠀⢸⠶⠆⣿⠀⣿⠀⠀⣇⡇⣇⡇⢸⠶⠆⣿⠶⠆⣿⠾⡅⠙⠶⣄⠀ ⠻⣤⠟⠀⠿⠀⠸⠀⠀⠹⣤⠟⠀⠀⠹⠃⠻⠀⠸⠤⠤⠿⠤⠄⠿⠤⠇⠻⣤⠟ `)
-            if (rand == 2) client.say(msg.channelName, `${msg.senderUsername}, NaM stfu weeb`);
-            logger.log(`NaMed ${msg.senderUsername} for weeb term: ${latestWeebTerm} in ${msg.channelName}`)
-        }
-        weebC++;
-    } else {
-        if (puke % 1000 === 0 && weebcd.fire()) {
-            let rand = Math.floor(Math.random() * 3)
-            if (rand == 0) client.say(msg.channelName, `${msg.senderUsername}, NaM stfu`);
-            if (rand == 1) client.say(msg.channelName, `${msg.senderUsername}, NaM 🇻🇳 ⣰⠛⣦⠛⣿⠛⢸⠛⠛⣿⠀⣿⠀⠸⡇⣸⡄⡿⢸⠛⠛⣿⠛⠃⣿⠛⡆⣴⠛⣦⠀ ⠘⠷⣄⠀⣿⠀⢸⠶⠆⣿⠀⣿⠀⠀⣇⡇⣇⡇⢸⠶⠆⣿⠶⠆⣿⠾⡅⠙⠶⣄⠀ ⠻⣤⠟⠀⠿⠀⠸⠀⠀⠹⣤⠟⠀⠀⠹⠃⠻⠀⠸⠤⠤⠿⠤⠄⠿⠤⠇⠻⣤⠟ `)
-            if (rand == 2) client.say(msg.channelName, `${msg.senderUsername}, NaM stfu weeb`);
-            logger.log(`NaMed ${msg.senderUsername} for weeb term: ${latestWeebTerm} in ${msg.channelName}`)
-        }
-        //db.get('forsenPuke').then(puke => db.set('forsenPuke', puke + 1))
-        puke++;
+
+    const channelConfigs = process.env.NODE_ENV === "production" ? await db.get('channels') : await db.get('debugchannels')
+    let channelConfig;
+    for (cc of channelConfigs) {
+        if (cc.channel === msg.channelName) channelConfig = cc
     }
+    console.log(channelConfig)
+    if (!channelConfig) return
+    if (channelConfig.weebFilter === "OFF") return
+    if (msg.messageText.includes("daumenbot") || weebC % weebCDMap[channelConfig.weebFilter] === 0) {
+        if (msg.senderUserID === '275711366' || msg.senderUserID === '455288756') return;
+        let rand = Math.floor(Math.random() * 3)
+        if (rand == 0) client.say(msg.channelName, `${msg.senderUsername}, NaM stfu`);
+        if (rand == 1) client.say(msg.channelName, `${msg.senderUsername}, NaM 🇻🇳 ⣰⠛⣦⠛⣿⠛⢸⠛⠛⣿⠀⣿⠀⠸⡇⣸⡄⡿⢸⠛⠛⣿⠛⠃⣿⠛⡆⣴⠛⣦⠀ ⠘⠷⣄⠀⣿⠀⢸⠶⠆⣿⠀⣿⠀⠀⣇⡇⣇⡇⢸⠶⠆⣿⠶⠆⣿⠾⡅⠙⠶⣄⠀ ⠻⣤⠟⠀⠿⠀⠸⠀⠀⠹⣤⠟⠀⠀⠹⠃⠻⠀⠸⠤⠤⠿⠤⠄⠿⠤⠇⠻⣤⠟ `)
+        if (rand == 2) client.say(msg.channelName, `${msg.senderUsername}, NaM stfu weeb`);
+        logger.log(`NaMed ${msg.senderUsername} for weeb term: ${latestWeebTerm} in ${msg.channelName}`)
+    }
+    weebC++;
+
 }
 
 const weebDetected = async (msg) => {
