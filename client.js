@@ -77,6 +77,7 @@ const on = (event, func) => {
 
 const join = (channelConfig) => {
     client.join(channelConfig.channel)
+    channelsConfig = channelsConfig.filter(config => config.channel != channelConfig.channel)
     channelsConfig.push(channelConfig)
 
     cd[channelConfig.channel] = new cooldown(cdMap[channelConfig.spam])
@@ -85,6 +86,7 @@ const join = (channelConfig) => {
 const part = (channel) => {
     client.part(channel)
     delete cd[channel]
+    channelsConfig = channelsConfig.filter(config => channel != config.channel)
 }
 
 function vary(msgText) {

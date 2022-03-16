@@ -25,7 +25,9 @@ const handle = async (msg, client) => {
         let config = { channel: args[0] }
         for (let i = 1; i < args.length; i++) {
             [key, value] = args[i].split(":")
-            config[key] = value
+            if (value == 'true') config[key] = true
+            else if (value == 'false') config[key] = false
+            else config[key] = value
         }
         if (!config["spam"]) config["spam"] = "LOW"
         if (!config["talkInOnline"]) config["talkInOnline"] = false
