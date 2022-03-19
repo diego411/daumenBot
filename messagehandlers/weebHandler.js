@@ -26,7 +26,6 @@ const handle = async (msg, client) => {
     for (cc of channelConfigs) {
         if (cc.channel === msg.channelName) channelConfig = cc
     }
-    console.log(channelConfig)
     if (!channelConfig) return
     if (channelConfig.weebFilter === "OFF") return
     if (msg.messageText.includes("daumenbot") || weebC % weebCDMap[channelConfig.weebFilter] === 0) {
