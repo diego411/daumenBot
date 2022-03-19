@@ -58,8 +58,8 @@ client.on("PRIVMSG", async (msg) => {
 
 const getMsgType = async (msg) => {
   if (commandHandler.isCommand(msg)) return MSGTYPES.COMMAND
+  if (eventHandler.isEvent(msg)) return MSGTYPES.EVENT
   if (await weebHandler.weebDetected(msg)) return MSGTYPES.WEEBMSG
-  if (isEvent(msg)) return MSGTYPES.EVENT
   return MSGTYPES.NONE
 }
 
@@ -68,9 +68,4 @@ const MSGTYPES = {
   WEEBMSG: 1,
   EVENT: 2,
   NONE: 3
-}
-
-//TODO
-function isEvent(msg) {
-  return true;
 }

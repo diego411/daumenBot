@@ -1,4 +1,5 @@
-var jam = ['lebronJAM aye', 'TriKool aye', 'TriKool🔥', '🔥THIS SOME🔥lebronJAM🔥ABSOLUTE FIRE🔥', 'lebronJAM 🔥', '🔥TriDance🔥', 'TriDance 🔥', 'TriDance', 'TriDance aye', 'TriKool'];
+const jam = ['lebronJAM aye', 'TriKool aye', 'TriKool🔥', '🔥THIS SOME🔥lebronJAM🔥ABSOLUTE FIRE🔥', 'lebronJAM 🔥', '🔥TriDance🔥', 'TriDance 🔥', 'TriDance', 'TriDance aye', 'TriKool'];
+const eventTriggers = ["!daumenbot", "TriHard", "lebronJAM", "$gn", "pajaS"];
 
 const handle = async (msg, client) => {
     if (msg.senderUsername === 'daumenbot') return;
@@ -29,6 +30,11 @@ function isAlertEvent(msg) {
     return msg.isAction &&
         msg.senderUsername == 'pajbot' &&
         msg.messageText.includes('pajaS 🚨 ALERT');
+}
+
+exports.isEvent = (msg) => {
+    for (trigger of eventTriggers)
+        if (msg.messageText.includes(trigger)) return true;
 }
 
 exports.handle = handle
