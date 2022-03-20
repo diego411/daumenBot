@@ -15,7 +15,7 @@ const weebCDMap = {
     "LOW": 25,
     "VERY LOW": 50,
     "ULTRA LOW": 100,
-    "FORSEN": 500
+    "FORSEN": 800
 }
 
 const handle = async (msg, client) => {
