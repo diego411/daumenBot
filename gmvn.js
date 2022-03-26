@@ -7,7 +7,7 @@ const startNamJob = async (c, database) => {
     client = c
     db = database
 
-    const job = new CronJob('00 00 00 * * *', function () {
+    const job = new CronJob('00 00 06 * * *', function () {
         logger.log("GFM VIETNAM");
         if (process.env.NODE_ENV !== 'production') {
             db.get('debugchannels').then(channels => {
