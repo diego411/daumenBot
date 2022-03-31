@@ -63,13 +63,8 @@ const me = async (channel, msgText) => {
     if (!channelConfig) return
     if (!channelConfig.talkInOnline && await twitchapi.isLive(channel)) return;
     if (cd[channel].fire()) {
-        try {
-            await client.me(channel, vary(msgText))
-        } catch (e) {
-            logger.log(e)
+            }
         }
-    }
-}
 
 const on = (event, func) => {
     client.on(event, func)

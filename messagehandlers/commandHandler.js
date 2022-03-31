@@ -19,7 +19,7 @@ const handle = async (msg, client) => {
 
     if (command === "join" && isAdmin(msg)) {
         if (args.length == 0) {
-            client.say(msg.channelName, 'please specify a channel to join')
+            client.say(msg.channelName, vary('please specify a channel to join'))
             return
         }
         let config = { channel: args[0] }
@@ -38,7 +38,7 @@ const handle = async (msg, client) => {
             db.get('channels').then(channels => db.set('channels', [...channels, config]))
         }
         client.join(config)
-        client.say(msg.channelName, `joined ${args[0]}`);
+        client.say(msg.channelName, vary(`joined ${args[0]}`));
         logger.log(`joined ${args[0]}`)
     }
     else if (command === "part" && isAdmin(msg)) {
@@ -46,20 +46,20 @@ const handle = async (msg, client) => {
             db.get('debugchannels').then((channels) => {
                 db.set('debugchannels', channels.filter(channel => channel.channel !== args[0]))
                 client.part(args[0])
-                client.say(msg.channelName, `left ${args[0]}`)
+                client.say(msg.channelName, vary(`left ${args[0]}`))
                 logger.log(`left ${args[0]}`)
             })
         } else {
             db.get('channels').then((channels) => {
                 db.set('channels', channels.filter(channel => channel.channel !== args[0]))
                 client.part(args[0])
-                client.say(msg.channelName, `left ${args[0]}`)
+                client.say(msg.channelName, vary(`left ${args[0]}`))
                 logger.log(`left ${args[0]}`)
             })
         }
     }
     else if (command === 'quit' && isAdmin(msg)) {
-        client.say(msg.channelName, 'quitting').then(() => {
+        client.say(msg.channelName, vary('quitting')).then(() => {
             process.exit(1);
         })
     }
@@ -67,10 +67,10 @@ const handle = async (msg, client) => {
         db.get(args[0]).then(console.log)
     }
     else if (command === 'check' && isAdmin(msg)) {
-        db.get('forsenPuke').then(forsenPuke => client.say(msg.channelName, forsenPuke))
+        db.get('forsenPuke').then(forsenPuke => client.say(msg.channelName, vary(forsenPuke)))
     }
     else if (command === "pyramid" && ((msg.isMod) || (msg.isModRaw))) {
-        if (await weebHandler.weebDetected(msg)) client.say(msg.channelName, "No, I don't think so")
+        if (await weebHandler.weebDetected(msg)) client.say(msg.channelName, vary("No, I don't think so"))
         else {
             let emote = args[1];
             let n = args[0];
@@ -87,7 +87,7 @@ const handle = async (msg, client) => {
     }
     else if (command === "test") {
         logger.log("test");
-        client.say(msg.channelName, "FeelsDankMan")
+        client.say(msg.channelName, vary("FeelsDankMan"))
     }
     else if (command === "say" && isAdmin(msg)) {
         console.log("trihard");
@@ -106,10 +106,10 @@ const handle = async (msg, client) => {
         if (weebMap[firstChar] != null) {
             weebMap[firstChar].push(args[0])
             await db.set('weebMap', weebMap)
-            client.say(msg.channelName, `added ${args[0]} to blacklist`);
+            client.say(msg.channelName, vary(`added ${args[0]} to blacklist`));
             logger.log(`added ${args[0]} to blacklist`)
         } else {
-            client.say(msg.channelName, `cant add ${args[0]} to blacklist (prob not an emote)`)
+            client.say(msg.channelName, vary(`cant add ${args[0]} to blacklist (prob not an emote)`))
         }
     }
     else if (command === "removeblacklist" && isAdmin(msg)) {
