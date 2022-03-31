@@ -4,7 +4,7 @@ const eventTriggers = ["!daumenbot", "TriHard", "lebronJAM", "$gn", "pajaS"];
 const handle = async (msg, client) => {
     if (msg.senderUsername === 'daumenbot') return;
     if (isAlertEvent(msg)) {
-        client.me(msg.channelName,  vary(`pajaSubs 🚨 ALERT`));
+        client.me(msg.channelName,  `pajaSubs 🚨 ALERT`);
     }
     if (msg.messageText == '!daumenbot' || msg.messageText == '+about' || msg.messageText == '+help') {
         client.say(msg.channelName, vary(`This bot nams the weebs xd. Contact @daumenloser or @yagnesh`))
