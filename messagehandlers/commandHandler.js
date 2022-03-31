@@ -66,11 +66,11 @@ const handle = async (msg, client) => {
     else if (command === 'get' && isAdmin(msg)) {
         db.get(args[0]).then(console.log)
     }
-    else if (command === 'check' && isAdmin(msg)) {
-        db.get('forsenPuke').then(forsenPuke => client.say(msg.channelName, forsenPuke)))
+    else if (command === 'check') {
+        db.get('forsenPuke').then(forsenPuke => client.say(msg.channelName, forsenPuke))
     }
     else if (command === "pyramid" && ((msg.isMod) || (msg.isModRaw))) {
-        if (await weebHandler.weebDetected(msg)) client.say(msg.channelName, "No, I don't think so"))
+        if (await weebHandler.weebDetected(msg)) client.say(msg.channelName, "No, I don't think so")
         else {
             let emote = args[1];
             let n = args[0];
@@ -87,7 +87,7 @@ const handle = async (msg, client) => {
     }
     else if (command === "test") {
         logger.log("test");
-        client.say(msg.channelName, "FeelsDankMan"))
+        client.say(msg.channelName, "FeelsDankMan")
     }
     else if (command === "say" && isAdmin(msg)) {
         console.log("trihard");
@@ -106,10 +106,10 @@ const handle = async (msg, client) => {
         if (weebMap[firstChar] != null) {
             weebMap[firstChar].push(args[0])
             await db.set('weebMap', weebMap)
-            client.say(msg.channelName, `added ${args[0]} to blacklist`));
+            client.say(msg.channelName, `added ${args[0]} to blacklist`);
             logger.log(`added ${args[0]} to blacklist`)
         } else {
-            client.say(msg.channelName, `cant add ${args[0]} to blacklist (prob not an emote)`))
+            client.say(msg.channelName, `cant add ${args[0]} to blacklist (prob not an emote)`)
         }
     }
     else if (command === "removeblacklist" && isAdmin(msg)) {
