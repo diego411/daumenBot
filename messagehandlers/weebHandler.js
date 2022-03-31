@@ -31,9 +31,9 @@ const handle = async (msg, client) => {
     if (msg.messageText.includes("daumenbot") || weebC % weebCDMap[channelConfig.weebFilter] === 0) {
         if (msg.senderUserID === '275711366' || msg.senderUserID === '455288756') return;
         let rand = Math.floor(Math.random() * 3)
-        if (rand == 0) client.say(msg.channelName, vary(`${msg.senderUsername}, NaM stfu`));
-        if (rand == 1) client.say(msg.channelName, vary(`${msg.senderUsername}, NaM 🇻🇳 ⣰⠛⣦⠛⣿⠛⢸⠛⠛⣿⠀⣿⠀⠸⡇⣸⡄⡿⢸⠛⠛⣿⠛⠃⣿⠛⡆⣴⠛⣦⠀ ⠘⠷⣄⠀⣿⠀⢸⠶⠆⣿⠀⣿⠀⠀⣇⡇⣇⡇⢸⠶⠆⣿⠶⠆⣿⠾⡅⠙⠶⣄⠀ ⠻⣤⠟⠀⠿⠀⠸⠀⠀⠹⣤⠟⠀⠀⠹⠃⠻⠀⠸⠤⠤⠿⠤⠄⠿⠤⠇⠻⣤⠟ `))
-        if (rand == 2) client.say(msg.channelName, vary(`${msg.senderUsername}, NaM stfu weeb`));
+        if (rand == 0) client.say(msg.channelName, `${msg.senderUsername}, NaM stfu`);
+        if (rand == 1) client.say(msg.channelName, `${msg.senderUsername}, NaM 🇻🇳 ⣰⠛⣦⠛⣿⠛⢸⠛⠛⣿⠀⣿⠀⠸⡇⣸⡄⡿⢸⠛⠛⣿⠛⠃⣿⠛⡆⣴⠛⣦⠀ ⠘⠷⣄⠀⣿⠀⢸⠶⠆⣿⠀⣿⠀⠀⣇⡇⣇⡇⢸⠶⠆⣿⠶⠆⣿⠾⡅⠙⠶⣄⠀ ⠻⣤⠟⠀⠿⠀⠸⠀⠀⠹⣤⠟⠀⠀⠹⠃⠻⠀⠸⠤⠤⠿⠤⠄⠿⠤⠇⠻⣤⠟ `)
+        if (rand == 2) client.say(msg.channelName, `${msg.senderUsername}, NaM stfu weeb`);
         logger.log(`NaMed ${msg.senderUsername} for weeb term: ${latestWeebTerm} in ${msg.channelName}`)
     }
     weebC++;
