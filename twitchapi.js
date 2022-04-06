@@ -6,6 +6,8 @@ const CLIENT_ID = process.env["CLIENT_ID"]
 const HELIX_USERS_URL = "https://api.twitch.tv/helix/users"
 const HELIX_STREAMS_URL = "https://api.twitch.tv/helix/streams"
 
+const BANPHRASE_API_URL = "https://forsen.tv/api/v1/banphrases/test"
+
 exports.getUserId = async (username) => {
     let data;
     try {
@@ -23,13 +25,18 @@ exports.getUserId = async (username) => {
 }
 
 exports.isLive = async (username) => {
-    let uid = await this.getUserId(username)
+    const uid = await this.getUserId(username)
 
-    let response = await axios.get(`${HELIX_STREAMS_URL}?user_id=${uid}`, {
+    const response = await axios.get(`${HELIX_STREAMS_URL}?user_id=${uid}`, {
         headers: {
             'Authorization': `Bearer ${OAUTH_TOKEN}`,
             'Client-Id': CLIENT_ID
         }
     })
     return response.data.data.length != 0
+}
+
+exports.isBannedPhrase = async (phrase) => {
+    const response = await axios.post(BANPHRASE_API_URL, { message: phrase }, { headers: { "Content-Type": "application/json" } })
+    return response.data.banned
 }
