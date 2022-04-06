@@ -1,6 +1,8 @@
 const Database = require("@replit/database");
 let db;
 
+const twitchapi = require('./twitchapi')
+
 if (process.env.NODE_ENV !== 'production') db = new Database(process.env["DB_URL"])
 else db = new Database();
 
@@ -58,6 +60,37 @@ exports.addWeebTerm = async (term) => {
         weebMap[firstChar].push(term)
         db.set('weebMap', weebMap)
     }
+}
+
+exports.addWeebLog = async (userID, userName, msg) => {
+    if (await twitchapi.isBannedPhrase(msg)) msg = "[BANPHRASED]"
+    const userMap = await db.get('userdata')
+    let userData = userMap[userID]
+    if (userData) {
+        userData.weebLogs.push(msg)
+    } else {
+        userData = {
+            id: userID,
+            userName: userName,
+            weebLogs: [msg]
+        }
+    }
+    userMap[userID] = userData
+    await db.set('userdata', userMap)
+}
+
+exports.getRandomWeebLine = async (userName) => {
+    const userID = await twitchapi.getUserId(userName)
+    const userMap = await db.get('userdata')
+
+    if (!userMap[userID]) return
+    return userMap[userID].weebLogs[Math.floor(Math.random() * userMap[userID].weebLogs.length)]
+}
+
+exports.getWeebMsgCount = async (userName) => {
+    const userID = await twitchapi.getUserId(userName)
+    const userMap = await db.get('userdata')
+    return userMap[userID] ? userMap[userID].weebLogs.length : 0
 }
 
 exports.removeWeebTerm = async (term) => {
