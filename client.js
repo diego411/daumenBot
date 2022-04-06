@@ -1,6 +1,7 @@
 const logger = require("./logger")
 const { ChatClient } = require("dank-twitch-irc")
 const mySecret = process.env['OAUTH']
+import { ChatClient, AlternateMessageModifier, SlowModeRateLimiter, IgnoreUnhandledPromiseRejectionsMixin } from "dank-twitch-irc" 
 
 const twitchapi = require('./twitchapi')
 
@@ -16,6 +17,7 @@ let client = new ChatClient({
 
 let i = 0
 
+client.use(new IgnoreUnhandledPromiseRejectionsMixin()) 
 const cooldown = require('cooldown');
 
 let cd = {};
