@@ -17,7 +17,15 @@ const handle = async (msg, client) => {
 
     let [command, ...args] = msg.messageText.slice(PREFIX.length).split(/ +/g);
 
-    if (command === "join" && isAdmin(msg)) {
+    if (command === "howweebis" || command === "hwis") {
+        client.say(msg.channelName, `I have a total of ${await db.getWeebMsgCount(args[0])} weeb messages logged for ${args[0]} NaM`)
+    }
+    if (command == "randomweebline" || command === "rwl") {
+        const randWeebLine = await db.getRandomWeebLine(args[0])
+        if (!randWeebLine) client.say(msg.channelName, `No weeb line logged for this user NaM 👍`)
+        else client.say(msg.channelName, `${args[0]}: ${randWeebLine}`)
+    }
+    else if (command === "join" && isAdmin(msg)) {
         if (args.length == 0) {
             client.say(msg.channelName, 'please specify a channel to join')
             return
@@ -94,6 +102,9 @@ const handle = async (msg, client) => {
     else if (command === "isLive") {
         const isLive = await twitchapi.isLive(args[0])
         client.say(msg.channelName, isLive)
+    }
+    else if (command == "isbanphrased") {
+        client.say(msg.channelName, await twitchapi.isBannedPhrase(args[0]))
     }
 }
 

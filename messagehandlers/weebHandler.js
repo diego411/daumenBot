@@ -27,7 +27,7 @@ const handle = async (msg, client) => {
         if (cc.channel === msg.channelName) channelConfig = cc
     }
     if (!channelConfig) return
-    //updateUserWeebStats(msg)
+    updateUserWeebStats(msg)
     if (channelConfig.weebFilter === "OFF") return
     if (msg.messageText.includes("daumenbot") || weebC % weebCDMap[channelConfig.weebFilter] === 0) {
         if (msg.senderUserID === '275711366' || msg.senderUserID === '455288756') return;
@@ -42,9 +42,7 @@ const handle = async (msg, client) => {
 }
 
 const updateUserWeebStats = (msg) => {
-    db.get("users").then(users => {
-
-    })
+    db.addWeebLog(msg.senderUserID, msg.senderUsername, msg.messageText)
 }
 
 const weebDetected = async (msg) => {
