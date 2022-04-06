@@ -9,16 +9,7 @@ const startNamJob = async (c, database) => {
 
     const job = new CronJob('00 00 06 * * *', function () {
         logger.log("GFM VIETNAM");
-        if (process.env.NODE_ENV !== 'production') {
-            db.get('debugchannels').then(channels => {
-                client.meEverywhere(channels, "GOOD FUCKING MORNING VIETNAM NaM 🇻🇳 ")
-            })
-        }
-        else {
-            db.get('channels').then(channels => {
-                client.meEverywhere(channels, "GOOD FUCKING MORNING VIETNAM NaM 🇻🇳 ")
-            })
-        }
+        client.meEverywhere(db.getChannelNames(), "GOOD FUCKING MORNING VIETNAM NaM 🇻🇳 ")
     }, null, true, 'Asia/Pontianak');
     job.start();
     logger.log("started gfmvn job")
