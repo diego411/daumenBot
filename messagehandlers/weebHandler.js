@@ -21,13 +21,13 @@ const weebCDMap = {
 const handle = async (msg, client) => {
     if (msg.displayName === 'daumenbot') return;
 
-    const channelConfigs = process.env.NODE_ENV === "production" ? await db.get('channels') : await db.get('debugchannels')
+    const channelConfigs = db.getChannelConfigs()
     let channelConfig;
     for (cc of channelConfigs) {
         if (cc.channel === msg.channelName) channelConfig = cc
     }
-    console.log(channelConfig)
     if (!channelConfig) return
+    //updateUserWeebStats(msg)
     if (channelConfig.weebFilter === "OFF") return
     if (msg.messageText.includes("daumenbot") || weebC % weebCDMap[channelConfig.weebFilter] === 0) {
         if (msg.senderUserID === '275711366' || msg.senderUserID === '455288756') return;
@@ -41,8 +41,14 @@ const handle = async (msg, client) => {
 
 }
 
+const updateUserWeebStats = (msg) => {
+    db.get("users").then(users => {
+
+    })
+}
+
 const weebDetected = async (msg) => {
-    let weebMap = await db.get('weebMap');
+    let weebMap = await db.getWeebMap()
     let words = msg.messageText.split(" ")
     for (let i = 0; i < words.length; i++) {
         let firstChar = words[i].charAt(0).toLowerCase()

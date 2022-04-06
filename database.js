@@ -9,6 +9,7 @@ let cachedValues = {};
 
 exports.init = async () => {
     await initCache()
+    return this
 }
 
 const initCache = async () => {
@@ -16,6 +17,17 @@ const initCache = async () => {
         let value = await db.get(key)
         cachedValues[key] = value
     }
+}
+
+exports.get = async (key) => {
+    let val
+    try {
+        val = await db.get(key)
+    } catch (e) {
+        console.log(e)
+        return null
+    }
+    return val
 }
 
 exports.getChannelNames = () => {
@@ -27,4 +39,50 @@ exports.getChannelConfigs = () => {
     return process.env.NODE_ENV === "production"
         ? cachedValues['channels']
         : cachedValues['debugchannels']
+}
+
+exports.getWeebMap = async () => {
+    return await db.get('weebMap')
+}
+
+exports.getWeebTermFor = async (letter) => {
+    const weebMap = await db.get('weebMap')
+    return weebMap[letter]
+}
+
+exports.addWeebTerm = async (term) => {
+    const weebMap = await db.get('weebMap')
+    const firstChar = term.charAt(0).toLowerCase()
+    if (weebMap[firstChar] != null) {
+        weebMap[firstChar] = weebMap[firstChar].filter(weebTerm => weebTerm !== term)
+        weebMap[firstChar].push(term)
+        db.set('weebMap', weebMap)
+    }
+}
+
+exports.removeWeebTerm = async (term) => {
+    const weebMap = await db.get('weebMap')
+    const firstChar = term.charAt(0)
+    if (weebMap[firstChar]) weebMap[firstChar] = weebMap[firstChar].filter(weebTerm => weebTerm !== term)
+    db.set('weebMap', weebMap)
+}
+
+exports.addConfig = async (config) => {
+    if (process.env.NODE_ENV !== "production") {
+        await db.get('debugchannels').then(channels => db.set('debugchannels', [...channels, config]))
+    } else {
+        await db.get('channels').then(channels => db.set('channels', [...channels, config]))
+    }
+}
+
+exports.removeConfig = async (channelName) => {
+    if (process.env.NODE_ENV !== "production") {
+        db.get('debugchannels').then((channels) => {
+            db.set('debugchannels', channels.filter(channel => channel.channel !== channelName))
+        })
+    } else {
+        db.get('channels').then((channels) => {
+            db.set('channels', channels.filter(channel => channel.channel !== channelName))
+        })
+    }
 }

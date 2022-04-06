@@ -32,31 +32,16 @@ const handle = async (msg, client) => {
         if (!config["spam"]) config["spam"] = "LOW"
         if (!config["talkInOnline"]) config["talkInOnline"] = false
         if (!config["weebFilter"]) config["weebFilter"] = "OFF"
-        if (process.env.NODE_ENV !== "production") {
-            db.get('debugchannels').then(channels => db.set('debugchannels', [...channels, config]))
-        } else {
-            db.get('channels').then(channels => db.set('channels', [...channels, config]))
-        }
+        db.addConfig(config)
         client.join(config)
         client.say(msg.channelName, `joined ${args[0]}`);
         logger.log(`joined ${args[0]}`)
     }
     else if (command === "part" && isAdmin(msg)) {
-        if (process.env.NODE_ENV !== "production") {
-            db.get('debugchannels').then((channels) => {
-                db.set('debugchannels', channels.filter(channel => channel.channel !== args[0]))
-                client.part(args[0])
-                client.say(msg.channelName, `left ${args[0]}`)
-                logger.log(`left ${args[0]}`)
-            })
-        } else {
-            db.get('channels').then((channels) => {
-                db.set('channels', channels.filter(channel => channel.channel !== args[0]))
-                client.part(args[0])
-                client.say(msg.channelName, `left ${args[0]}`)
-                logger.log(`left ${args[0]}`)
-            })
-        }
+        db.removeConfig(args[0])
+        client.part(args[0])
+        client.say(msg.channelName, `left ${args[0]}`)
+        logger.log(`left ${args[0]}`)
     }
     else if (command === 'quit' && isAdmin(msg)) {
         client.say(msg.channelName, 'quitting').then(() => {
@@ -66,73 +51,38 @@ const handle = async (msg, client) => {
     else if (command === 'get' && isAdmin(msg)) {
         db.get(args[0]).then(console.log)
     }
-    else if (command === 'check' && isAdmin(msg)) {
-        db.get('forsenPuke').then(forsenPuke => client.say(msg.channelName, forsenPuke))
-    }
-    else if (command === "pyramid" && ((msg.isMod) || (msg.isModRaw))) {
-        if (await weebHandler.weebDetected(msg)) client.say(msg.channelName, "No, I don't think so")
-        else {
-            let emote = args[1];
-            let n = args[0];
-            let max = 50; let min = 3;
-            if (n <= max && n >= min) {
-                for (let k = 0; k <= n; k++) {
-                    client.say(msg.channelName, stackEmote(k, emote));
-                }
-                for (let k = n - 1; k > 0; k--) {
-                    client.say(msg.channelName, stackEmote(k, emote));
-                }
-            }
-        }
-    }
     else if (command === "test") {
-        logger.log("test");
         client.say(msg.channelName, "FeelsDankMan")
+        logger.log("test");
     }
     else if (command === "say" && isAdmin(msg)) {
-        console.log("trihard");
         client.say(msg.channelName, `${args.join(' ')}`);
+        logger.log(`said ${args.join(' ')} in ${msg.channelName}`)
     }
     else if (command === "sayEverywhere" && isAdmin(msg)) {
-        if (process.env.NODE_ENV !== "production") {
-            db.get('debugchannels').then(channels => client.sayEverywhere(channels, args[0]))
-        } else {
-            db.get('channels').then(channels => client.sayEverywhere(channels, args[0]))
-        }
+        client.sayEverywhere(db.getChannelNames(), args[0])
+        logger.log(`said ${args[0]} in every channel`)
     }
     else if (command === "blacklist" && isAdmin(msg)) {
-        let weebMap = await db.get('weebMap')
-        let firstChar = args[0].charAt(0).toLowerCase()
-        if (weebMap[firstChar] != null) {
-            weebMap[firstChar].push(args[0])
-            await db.set('weebMap', weebMap)
-            client.say(msg.channelName, `added ${args[0]} to blacklist`);
-            logger.log(`added ${args[0]} to blacklist`)
-        } else {
-            client.say(msg.channelName, `cant add ${args[0]} to blacklist (prob not an emote)`)
-        }
+        db.addWeebTerm(args[0])
+        client.say(msg.channelName, `added ${args[0]} to blacklist`);
+        logger.log(`added ${args[0]} to blacklist`)
     }
     else if (command === "removeblacklist" && isAdmin(msg)) {
-        let weebMap = await db.get('weebMap')
-        let firstChar = args[0].charAt(0)
-        if (weebMap[firstChar]) weebMap[firstChar] = weebMap[firstChar].filter(term => term !== args[0])
-        await db.set('weebMap', weebMap)
+        await db.removeWeebTerm(args[0])
         client.say(msg.channelName, `removed ${args[0]} from blacklist`);
         logger.log(`remove ${args[0]} from blacklist`)
     }
     else if (command === "query" && isAdmin(msg)) {
         if (args[0] === "weebMap") {
-            let weebMap = await db.get('weebMap')
-            let firstChar = args[1].charAt(0)
-            if (weebMap[firstChar]) client.say(msg.channelName, `weeb terms with ${firstChar}: ${weebMap[firstChar]}`)
-            else client.say(msg.channelName, `no terms for that letter`)
+            const weebTerms = await db.getWeebTermFor(args[1].charAt(0))
+            client.say(msg.channelName, `weeb terms with ${args[1].charAt(0)}: ${weebTerms}`)
         }
     }
     else if (command === "channellist") {
-        let channelconfigs = process.env.NODE_ENV === "production" ? await db.get('channels') : await db.get('debugchannels')
+        const channelconfigs = db.getChannelConfigs()
         let channels = "";
         for (cc of channelconfigs) {
-            console.log(cc)
             channels += `${cc.channel}, `
         }
         client.say(msg.channelName, channels)

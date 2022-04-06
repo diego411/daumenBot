@@ -27,13 +27,11 @@ const cdMap = {
 }
 let channelsConfig = [];
 
-const init = (channels) => {
-    channelsConfig = channels
+const init = (channelConfigs) => {
     client.connect()
-    for (let j = 0; j < channels.length; j++) {
-        client.join(channels[j].channel)
-        cd[channels[j].channel] = new cooldown(cdMap[channels[j].spam])
-        logger.log(`joined ${channels[j].channel}`)
+    for (channelConfig of channelConfigs) {
+        this.join(channelConfig)
+        logger.log(`joined ${channelConfig.channel}`)
     }
 }
 
@@ -51,11 +49,11 @@ const say = async (channel, msgText) => {
 }
 
 const sayEverywhere = async (channels, msgText) => {
-    channels.map(async (channel) => await say(channel.channel, msgText))
+    channels.map(async (channel) => await say(channel, msgText))
 }
 
 const meEverywhere = async (channels, msgText) => {
-    channels.map(async channel => await me(channel.channel, msgText))
+    channels.map(async channel => await me(channel, msgText))
 }
 
 const me = async (channel, msgText) => {
@@ -76,11 +74,16 @@ const on = (event, func) => {
 }
 
 const join = (channelConfig) => {
-    client.join(channelConfig.channel)
-    channelsConfig = channelsConfig.filter(config => config.channel != channelConfig.channel)
-    channelsConfig.push(channelConfig)
+    try {
+        client.join(channelConfig.channel)
 
-    cd[channelConfig.channel] = new cooldown(cdMap[channelConfig.spam])
+        channelsConfig = channelsConfig.filter(config => config.channel != channelConfig.channel)
+        channelsConfig.push(channelConfig)
+
+        cd[channelConfig.channel] = new cooldown(cdMap[channelConfig.spam])
+    } catch (e) {
+        logger.log(e)
+    }
 }
 
 const part = (channel) => {
