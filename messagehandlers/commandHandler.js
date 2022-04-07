@@ -18,7 +18,10 @@ const handle = async (msg, client) => {
     let [command, ...args] = msg.messageText.slice(PREFIX.length).split(/ +/g);
 
     if (command === "howweebis" || command === "hwis") {
-        client.say(msg.channelName, `I have a total of ${await db.getWeebMsgCount(args[0])} weeb messages logged for ${args[0]} NaM`)
+        const userName = args[0] ? args[0] : msg.senderUsername
+        const weebMsgCount = await db.getWeebMsgCount(userName)
+        if (weebMsgCount === 0) client.say(msg.channelName, `@${msg.senderUsername} I have 0 weeb lines logged for that user NaM 👍`)
+        else client.say(msg.channelName, `@${msg.senderUsername} I have a total of ${weebMsgCount} weeb messages logged for ${userName} NaM`)
     }
     if (command == "randomweebline" || command === "rwl") {
         const randWeebLine = await db.getRandomWeebLine(args[0])
