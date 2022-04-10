@@ -1,7 +1,5 @@
 const logger = require('../logger')
 
-const weebHandler = require('./weebHandler')
-
 const twitchapi = require('../twitchapi');
 
 const PREFIX = '+'
@@ -26,7 +24,10 @@ const handle = async (msg, client) => {
     if (command == "randomweebline" || command === "rwl") {
         const randWeebLine = await db.getRandomWeebLine(args[0])
         if (!randWeebLine) client.say(msg.channelName, `No weeb line logged for this user NaM 👍`)
-        else client.say(msg.channelName, `${args[0]}: ${randWeebLine}`)
+        const response = `${args[0]}: ${randWeebLine}`
+        if (await twitchapi.isBannedPhrase(response)) client.say(msg.channelName, `${args[0]}: [BANPHRASED]`)
+        else if (response.length > 250) client.say(msg.channelName, `${args[0]}: [long message]`)
+        else client.say(msg.channelName, response)
     }
     else if (command === "join" && isAdmin(msg)) {
         if (args.length == 0) {
