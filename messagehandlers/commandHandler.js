@@ -25,7 +25,7 @@ const handle = async (msg, client) => {
         const randWeebLine = await db.getRandomWeebLine(args[0])
         if (!randWeebLine) client.say(msg.channelName, `No weeb line logged for this user NaM 👍`)
         const response = `${args[0]}: ${randWeebLine}`
-        if (await twitchapi.isBannedPhrase(response)) client.say(msg.channelName, `${args[0]}: [BANPHRASED]`)
+        if (await twitchapi.isBannedPhrase(response)) client.say(msg.channelName, `[BANPHRASED]`)
         else if (response.length > 250) client.say(msg.channelName, `${args[0]}: [long message]`)
         else client.say(msg.channelName, response)
     }
