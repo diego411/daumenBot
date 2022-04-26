@@ -14,7 +14,12 @@ const handle = async (msg, client) => {
     if (msg.displayName === 'daumenbot') return;
 
     let [command, ...args] = msg.messageText.slice(PREFIX.length).split(/ +/g);
-
+    if (command === "ping") {
+        let dateNow = Date.now()
+        await client.ping();
+        let dateAfterPing = Date.now()
+        client.say(msg.channelName, "Ping to tmi is approx. " + (dateAfterPing - dateNow) + "ms")
+    }
     if (command === "howweebis" || command === "hwis") {
         const userName = args[0] ? args[0] : msg.senderUsername
         const weebMsgCount = await db.getWeebMsgCount(userName)

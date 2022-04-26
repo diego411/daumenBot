@@ -87,6 +87,10 @@ const join = (channelConfig) => {
     }
 }
 
+const ping = async () => {
+    return client.ping();
+}
+
 const part = (channel) => {
     client.part(channel)
     delete cd[channel]
@@ -114,3 +118,4 @@ exports.me = me
 exports.on = on
 exports.join = join
 exports.part = part
+exports.ping = ping
