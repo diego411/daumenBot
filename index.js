@@ -8,7 +8,6 @@
   }
 
   const commandHandler = require('./messagehandlers/commandHandler')
-  const weebHandler = require('./messagehandlers/weebHandler')
   const eventHandler = require('./messagehandlers/eventHandler')
 
   const replitConfig = require('./replitConfig')
@@ -17,7 +16,6 @@
   const database = await require('./database').init()
 
   commandHandler.init(database)
-  weebHandler.init(database)
 
   const client = require('./client');
 
@@ -41,10 +39,6 @@
         commandHandler.handle(msg, client)
         break
       }
-      case MSGTYPES.WEEBMSG: {
-        weebHandler.handle(msg, client)
-        break
-      }
       case MSGTYPES.EVENT: {
         eventHandler.handle(msg, client)
         break
@@ -55,16 +49,14 @@
 
   const getMsgType = async (msg) => {
     if (commandHandler.isCommand(msg)) return MSGTYPES.COMMAND
-    if (await weebHandler.weebDetected(msg)) return MSGTYPES.WEEBMSG
-    if (isEvent(msg)) return MSGTYPES.EVENT
+    if (eventHandler.isEvent(msg)) return MSGTYPES.EVENT
     return MSGTYPES.NONE
   }
 
   const MSGTYPES = {
     COMMAND: 0,
-    WEEBMSG: 1,
-    EVENT: 2,
-    NONE: 3
+    EVENT: 1,
+    NONE: 2
   }
 
   //TODO

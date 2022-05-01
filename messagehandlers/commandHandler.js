@@ -21,18 +21,10 @@ const handle = async (msg, client) => {
         client.say(msg.channelName, "Ping to tmi is approx. " + (dateAfterPing - dateNow) + "ms")
     }
     if (command === "howweebis" || command === "hwis") {
-        const userName = args[0] ? args[0] : msg.senderUsername
-        const weebMsgCount = await db.getWeebMsgCount(userName)
-        if (weebMsgCount === 0) client.say(msg.channelName, `@${msg.senderUsername} I have 0 weeb lines logged for that user NaM 👍`)
-        else client.say(msg.channelName, `@${msg.senderUsername} I have a total of ${weebMsgCount} weeb messages logged for ${userName} NaM`)
+        client.say(msg.channelName, `under development`)
     }
     if (command == "randomweebline" || command === "rwl") {
-        const randWeebLine = await db.getRandomWeebLine(args[0])
-        if (!randWeebLine) client.say(msg.channelName, `@${msg.senderUsername} No weeb line logged for this user NaM 👍`)
-        const response = `${args[0]}: ${randWeebLine}`
-        if (await twitchapi.isBannedPhrase(response)) client.say(msg.channelName, `@${msg.senderUsername} [BANPHRASED]`)
-        else if (response.length > 250) client.say(msg.channelName, `${args[0]}: [long message]`)
-        else client.say(msg.channelName, response)
+        client.say(msg.channelName, `under development`)
     }
     else if (command === "join" && isAdmin(msg)) {
         if (args.length == 0) {
