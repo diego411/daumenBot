@@ -59,10 +59,5 @@
     NONE: 2
   }
 
-  //TODO
-  function isEvent(msg) {
-    return true;
-  }
-
 }())
 

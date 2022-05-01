@@ -28,7 +28,7 @@ const cdMap = {
 }
 let channelsConfig = [];
 
-const init = (channelConfigs) => {
+exports.init = (channelConfigs) => {
     client.connect()
     for (channelConfig of channelConfigs) {
         this.join(channelConfig)
@@ -36,7 +36,7 @@ const init = (channelConfigs) => {
     }
 }
 
-const say = async (channel, msgText) => {
+exports.say = async (channel, msgText) => {
     const channelConfig = getChannelConfigForChannel(channel)
     if (!channelConfig) return
     if (!channelConfig.talkInOnline && await twitchapi.isLive(channel)) return;
@@ -49,15 +49,15 @@ const say = async (channel, msgText) => {
     }
 }
 
-const sayEverywhere = async (channels, msgText) => {
+exports.sayEverywhere = async (channels, msgText) => {
     channels.map(async (channel) => await say(channel, msgText))
 }
 
-const meEverywhere = async (channels, msgText) => {
+exports.meEverywhere = async (channels, msgText) => {
     channels.map(async channel => await me(channel, msgText))
 }
 
-const me = async (channel, msgText) => {
+exports.me = async (channel, msgText) => {
     const channelConfig = getChannelConfigForChannel(channel)
     if (!channelConfig) return
     if (!channelConfig.talkInOnline && await twitchapi.isLive(channel)) return;
@@ -70,11 +70,11 @@ const me = async (channel, msgText) => {
     }
 }
 
-const on = (event, func) => {
+exports.on = (event, func) => {
     client.on(event, func)
 }
 
-const join = (channelConfig) => {
+exports.join = (channelConfig) => {
     try {
         client.join(channelConfig.channel)
 
@@ -87,11 +87,11 @@ const join = (channelConfig) => {
     }
 }
 
-const ping = async () => {
+exports.ping = async () => {
     return client.ping();
 }
 
-const part = (channel) => {
+exports.part = (channel) => {
     client.part(channel)
     delete cd[channel]
     channelsConfig = channelsConfig.filter(config => channel != config.channel)
@@ -109,13 +109,3 @@ function getChannelConfigForChannel(channelname) {
     }
     return null
 }
-
-exports.init = init
-exports.say = say
-exports.sayEverywhere = sayEverywhere
-exports.meEverywhere = meEverywhere
-exports.me = me
-exports.on = on
-exports.join = join
-exports.part = part
-exports.ping = ping

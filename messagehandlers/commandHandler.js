@@ -5,11 +5,11 @@ const twitchapi = require('../twitchapi');
 const PREFIX = '+'
 let db;
 
-const init = (database) => {
+exports.init = (database) => {
     db = database
 }
 
-const handle = async (msg, client) => {
+exports.handle = async (msg, client) => {
     //commands
     if (msg.displayName === 'daumenbot') return;
 
@@ -121,11 +121,7 @@ function isAdmin(msg) {
     return (msg.senderUserID === '150819483' || msg.senderUserID === '124776535' || msg.senderUserID === '275711366' || msg.senderUserID === '151035078');
 }
 
-const isCommand = (msg) => {
+exports.isCommand = (msg) => {
     if (msg.messageText.charAt(0) === PREFIX) return true;
     else return false;
 }
-
-exports.handle = handle
-exports.isCommand = isCommand
-exports.init = init

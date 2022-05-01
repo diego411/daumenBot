@@ -3,7 +3,7 @@ const CronJob = require('cron').CronJob;
 
 let client;
 let db;
-const startNamJob = async (c, database) => {
+exports.startNamJob = async (c, database) => {
     client = c
     db = database
 
@@ -14,5 +14,3 @@ const startNamJob = async (c, database) => {
     job.start();
     logger.log("started gfmvn job")
 }
-
-exports.startNamJob = startNamJob
