@@ -6,5 +6,5 @@ exports.log = (msg) => {
         date_ob.getHours() + ":" +
         date_ob.getMinutes() + ":" +
         date_ob.getSeconds()
-    console.log("[" + timestamp + "]" + " " + msg)
+    console.log("[" + timestamp + "]" + " " + JSON.stringify(msg))
 }
