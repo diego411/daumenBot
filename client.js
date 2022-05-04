@@ -32,7 +32,7 @@ exports.init = (channelConfigs) => {
     client.connect()
     for (channelConfig of channelConfigs) {
         this.join(channelConfig)
-        logger.log(`joined ${channelConfig.channel}`)
+        logger.log(`joined ${channelConfig.channel_name}`)
     }
 }
 
@@ -50,11 +50,11 @@ exports.say = async (channel, msgText) => {
 }
 
 exports.sayEverywhere = async (channels, msgText) => {
-    channels.map(async (channel) => await say(channel, msgText))
+    channels.map(async (channel) => await this.say(channel, msgText))
 }
 
 exports.meEverywhere = async (channels, msgText) => {
-    channels.map(async channel => await me(channel, msgText))
+    channels.map(async channel => await this.me(channel, msgText))
 }
 
 exports.me = async (channel, msgText) => {
@@ -76,12 +76,12 @@ exports.on = (event, func) => {
 
 exports.join = (channelConfig) => {
     try {
-        client.join(channelConfig.channel)
+        client.join(channelConfig.channel_name)
 
-        channelsConfig = channelsConfig.filter(config => config.channel != channelConfig.channel)
+        channelsConfig = channelsConfig.filter(config => config.channel_name != channelConfig.channel_name)
         channelsConfig.push(channelConfig)
 
-        cd[channelConfig.channel] = new cooldown(cdMap[channelConfig.spam])
+        cd[channelConfig.channel_name] = new cooldown(cdMap[channelConfig.spam])
     } catch (e) {
         logger.log(e)
     }
@@ -103,9 +103,9 @@ function vary(msgText) {
     else return `${msgText}`;
 }
 
-function getChannelConfigForChannel(channelname) {
+function getChannelConfigForChannel(channel_name) {
     for (channelConfig of channelsConfig) {
-        if (channelConfig.channel.includes(channelname)) return channelConfig
+        if (channelConfig.channel_name.includes(channel_name)) return channelConfig
     }
     return null
 }

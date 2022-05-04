@@ -1,28 +1,19 @@
-const Database = require("@replit/database");
-let db;
+const db_client = require('redis').createClient()
+db_client.on('error', (err) => console.log('Redis Client Error', err));
 
-if (process.env.NODE_ENV !== 'production') db = new Database(process.env["DB_URL"])
-else db = new Database();
+const NODE_ENV = process.env.NODE_ENV
+const CONFIGS_KEY = NODE_ENV === "production"
+    ? "channel_configs"
+    : "debug_channel_configs"
 
-const cachedKeys = ["channels", "debugchannels"]
-let cachedValues = {};
-
-exports.init = async () => {
-    await initCache()
-    return this
-}
-
-const initCache = async () => {
-    for (key of cachedKeys) {
-        let value = await db.get(key)
-        cachedValues[key] = value
-    }
+exports.connect = async () => {
+    await db_client.connect()
 }
 
 exports.get = async (key) => {
     let val
     try {
-        val = await db.get(key)
+        val = JSON.parse(await db_client.get(key))
     } catch (e) {
         console.log(e)
         return null
@@ -30,33 +21,28 @@ exports.get = async (key) => {
     return val
 }
 
-exports.getChannelNames = () => {
-    let channelConfigs = this.getChannelConfigs()
-    return channelConfigs.map(config => config.channel)
+exports.getChannelNames = async () => {
+    let channelConfigs = await this.getChannelConfigs()
+    return channelConfigs.map(config => config.channel_name)
 }
 
-exports.getChannelConfigs = () => {
-    return process.env.NODE_ENV === "production"
-        ? cachedValues['channels']
-        : cachedValues['debugchannels']
+exports.getChannelConfigs = async () => {
+    return await JSON.parse(await db_client.get(CONFIGS_KEY)) || []
 }
 
 exports.addConfig = async (config) => {
-    if (process.env.NODE_ENV !== "production") {
-        await db.get('debugchannels').then(channels => db.set('debugchannels', [...channels, config]))
-    } else {
-        await db.get('channels').then(channels => db.set('channels', [...channels, config]))
+    let channel_configs = await db_client.get(CONFIGS_KEY)
+    if (!channel_configs) {
+        db_client.set(CONFIGS_KEY, JSON.stringify([config]))
+        return
     }
+    channel_configs = JSON.parse(channel_configs).filter(channel_config => channel_config.channel_name !== config.channel_name)
+    db_client.set(CONFIGS_KEY, JSON.stringify([...channel_configs, config]))
 }
 
-exports.removeConfig = async (channelName) => {
-    if (process.env.NODE_ENV !== "production") {
-        db.get('debugchannels').then((channels) => {
-            db.set('debugchannels', channels.filter(channel => channel.channel !== channelName))
-        })
-    } else {
-        db.get('channels').then((channels) => {
-            db.set('channels', channels.filter(channel => channel.channel !== channelName))
-        })
-    }
+exports.removeConfig = async (channel_name) => {
+    let channel_configs = await db_client.get(CONFIGS_KEY)
+    if (!channel_configs) return
+    channel_configs = JSON.parse(channel_configs)
+    db_client.set(CONFIGS_KEY, JSON.stringify(channel_configs.filter(config => config.channel_name !== channel_name)))
 }

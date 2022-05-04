@@ -4,15 +4,14 @@
   "description": "",
   "main": "bot.js",
   "dependencies": {
-    "@replit/database": "^2.0.1",
     "axios": "^0.26.1",
     "cooldown": "^0.2.0",
     "cron": "^1.8.2",
     "dank-twitch-irc": "^4.3.0",
     "dotenv": "^16.0.0",
-    "express": "^4.17.3",
     "fs": "0.0.1-security",
     "nodemon": "^2.0.2",
+    "redis": "^4.0.6",
     "tmi.js": "^1.5.0"
   },
   "scripts": {

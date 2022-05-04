@@ -10,16 +10,14 @@
   const commandHandler = require('./messagehandlers/commandHandler')
   const eventHandler = require('./messagehandlers/eventHandler')
 
-  const replitConfig = require('./replitConfig')
-  replitConfig.config()
-
-  const database = await require('./database').init()
+  const database = require('./database')
+  await database.connect()
 
   commandHandler.init(database)
 
   const client = require('./client');
 
-  client.init(database.getChannelConfigs())
+  client.init(await database.getChannelConfigs())
 
   const gmvn = require('./gmvn')
   gmvn.startNamJob(client, database)
