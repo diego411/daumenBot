@@ -18,10 +18,10 @@ exports.getUserId = async (username) => {
             }
         })
     } catch (e) {
-        return "user doesnt exist"
+        return null
     }
     if (data.data.data.length > 0) return data.data.data[0].id
-    else return "user doesnt exist"
+    else return null
 }
 
 exports.isLive = async (username) => {
