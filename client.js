@@ -40,9 +40,13 @@ exports.say = async (channel, msgText) => {
     const channelConfig = getChannelConfigForChannel(channel)
     if (!channelConfig) return
     if (!channelConfig.talkInOnline && await twitchapi.isLive(channel)) return;
-    if (cd[channel].fire()) {
+    if (!cd[channel].fire()) return
+
+    let saidMessage = false
+    while (!saidMessage) {
         try {
             await client.say(channel, vary(msgText))
+            saidMessage = true
         } catch (e) {
             logger.log(e)
         }
