@@ -20,12 +20,6 @@ client.use(new IgnoreUnhandledPromiseRejectionsMixin())
 const cooldown = require('cooldown');
 
 let cd = {};
-const cdMap = {
-    "LOW": 10000,
-    "MID": 5000,
-    "HIGH": 2000,
-    "VERYHIGH": 1000
-}
 let channelsConfig = [];
 
 exports.init = (channelConfigs) => {
@@ -48,7 +42,7 @@ exports.say = async (channel, msgText) => {
             await client.say(channel, vary(msgText))
             saidMessage = true
         } catch (e) {
-            logger.log(e)
+            console.log(e)
         }
     }
 }
@@ -69,7 +63,7 @@ exports.me = async (channel, msgText) => {
         try {
             await client.me(channel, msgText)
         } catch (e) {
-            logger.log(e)
+            console.log(e)
         }
     }
 }
@@ -85,9 +79,9 @@ exports.join = (channelConfig) => {
         channelsConfig = channelsConfig.filter(config => config.channel_name != channelConfig.channel_name)
         channelsConfig.push(channelConfig)
 
-        cd[channelConfig.channel_name] = new cooldown(cdMap[channelConfig.spam])
+        cd[channelConfig.channel_name] = new cooldown(channelConfig.spam)
     } catch (e) {
-        logger.log(e)
+        console.log(e)
     }
 }
 

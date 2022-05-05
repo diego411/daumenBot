@@ -1,3 +1,4 @@
+const ChannelConfig = require('../ChannelConfig')
 const logger = require('../logger')
 
 const twitchapi = require('../twitchapi');
@@ -32,25 +33,13 @@ exports.handle = async (msg, client) => {
                 client.say(msg.channelName, `@${msg.senderUsername} Given channel probably does not exist or is banned`)
                 return
             }
-            let default_config = {
-                channel_name: channel_name,
-                spam: "LOW",
-                talkInOnline: false,
-                weebFilter: "OFF"
+            const config = ChannelConfig.construct_from(args)
+            if (!config) {
+                client.say(msg.channelName, `@${msg.senderUsername} Given parameters could not be parsed`)
+                return
             }
-            for (let i = 1; i < args.length; i++) {
-                try {
-                    [key, value] = args[i].split(":")
-                } catch (e) {
-                    client.say(msg.channelName, `@${msg.senderUsername} Given parameters could not be parsed`)
-                    return
-                }
-                if (value == 'true') default_config[key] = true
-                else if (value == 'false') default_config[key] = false
-                else default_config[key] = value
-            }
-            db.addConfig(default_config)
-            client.join(default_config)
+            db.addConfig(config)
+            client.join(config)
             client.say(msg.channelName, `joined ${channel_name}`);
             logger.log(`joined ${channel_name}`)
             break
