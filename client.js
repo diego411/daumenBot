@@ -1,5 +1,5 @@
 const logger = require("./logger")
-const { ChatClient, IgnoreUnhandledPromiseRejectionsMixin } = require("dank-twitch-irc")
+const { ChatClient, IgnoreUnhandledPromiseRejectionsMixin, AlternateMessageModifier } = require("dank-twitch-irc")
 const mySecret = process.env['OAUTH']
 
 const twitchapi = require('./twitchapi')
@@ -14,9 +14,8 @@ let client = new ChatClient({
     },
 });
 
-let i = 0
-
 client.use(new IgnoreUnhandledPromiseRejectionsMixin())
+client.use(new AlternateMessageModifier(client));
 const cooldown = require('cooldown');
 
 let cd = {};
@@ -39,7 +38,7 @@ exports.say = async (channel, msgText) => {
     let saidMessage = false
     while (!saidMessage) {
         try {
-            await client.say(channel, vary(msgText))
+            await client.say(channel, msgText)
             saidMessage = true
         } catch (e) {
             console.log(e)
@@ -93,12 +92,6 @@ exports.part = (channel) => {
     client.part(channel)
     delete cd[channel]
     channelsConfig = channelsConfig.filter(config => channel != config.channel)
-}
-
-function vary(msgText) {
-    i++;
-    if (i % 2 == 0) return `${msgText} ⠀`;
-    else return `${msgText}`;
 }
 
 function getChannelConfigForChannel(channel_name) {
