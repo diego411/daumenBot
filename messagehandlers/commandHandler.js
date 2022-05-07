@@ -1,4 +1,6 @@
 const ChannelConfig = require('../ChannelConfig')
+const Command = require('./Command')
+const commandExecutor = require('./commandexecutor')
 const logger = require('../logger')
 
 const twitchapi = require('../twitchapi');
@@ -13,43 +15,83 @@ exports.init = (database) => {
 exports.handle = async (msg, client) => {
     if (msg.displayName === "daumenbot") return;
 
-    let [command, ...args] = msg.messageText.slice(PREFIX.length).split(/ +/g);
-    switch (command) {
+    let [command_name, ...raw_args] = msg.messageText.slice(PREFIX.length).split(/ +/g);
+    let code, args, user, name, adminRequired, tagUser, client_callback
+    args = {}
+    user = msg.senderUsername
+    channel = msg.channelName
+    adminRequired = false
+    tagUser = true
+    client_callback = client.say
+
+    switch (command_name) {
         case "ping": {
-            let dateNow = Date.now()
-            await client.ping();
-            let dateAfterPing = Date.now()
-            client.say(msg.channelName, `@${msg.senderUsername} Ping to tmi is approx. ${dateAfterPing - dateNow} ms`)
+            name = "ping"
+
+            code = async () => {
+                let dateNow = Date.now()
+                await client.ping();
+                let dateAfterPing = Date.now()
+                return `Ping to tmi is approx. ${dateAfterPing - dateNow} ms`
+            }
+
             break
         }
         case "join": {
-            if (!isAdmin(msg.senderUserID)) return
-            if (args.length == 0) {
-                client.say(msg.channelName, `@${msg.senderUsername} Please specify a channel to join`)
-                return
+            name = "join"
+            adminRequired = true
+
+            if (raw_args.length == 0) {
+                code = () => 'Please specify a channel to join'
+                break
             }
-            const channel_name = args[0]
+
+            channel_name = raw_args[0]
+
             if (!await twitchapi.getUserId(channel_name)) {
-                client.say(msg.channelName, `@${msg.senderUsername} Given channel probably does not exist or is banned`)
-                return
+                code = () => 'Given channel probably does not exist or is banned'
+                break
             }
-            const config = ChannelConfig.construct_from(args)
-            if (!config) {
-                client.say(msg.channelName, `@${msg.senderUsername} Given parameters could not be parsed`)
-                return
+
+            args = {
+                user_id: msg.senderUserID,
+                channel_name: raw_args[0],
+                config: ChannelConfig.construct_from(raw_args)
             }
-            db.addConfig(config)
-            client.join(config)
-            client.say(msg.channelName, `joined ${channel_name}`);
-            logger.log(`joined ${channel_name}`)
+
+            if (!args.config) {
+                code = () => `Given parameter could not be parsed`
+                break
+            }
+
+            code = async ({ args: args }) => {
+                db.addConfig(args.config)
+                client.join(args.config)
+                return `joined ${channel_name}`
+            }
+
             break
         }
         case "part": {
-            const channel_name = args[0]
-            await db.removeConfig(channel_name)
-            client.part(channel_name)
-            client.say(msg.channelName, `left ${channel_name}`)
-            logger.log(`left ${channel_name}`)
+            name = "part"
+            adminRequired = true
+
+            if (raw_args.length == 0) {
+                code = () => 'Please specify a channel to part from'
+                break
+            }
+
+            args = {
+                user_id: msg.senderUserID,
+                channel_name: raw_args[0]
+            }
+
+            code = async ({ args: args }) => {
+                await db.removeConfig(args.channel_name)
+                client.part(args.channel_name)
+                return `left ${args.channel_name}`
+            }
+
             break
         }
         case "quit": {
@@ -59,57 +101,140 @@ exports.handle = async (msg, client) => {
             break
         }
         case "get": {
-            if (!args[0]) {
-                client.say(msg.channelName, `No key specified`)
-                return
+            name = "get"
+            adminRequired = true
+
+            if (!raw_args[0]) {
+                code = () => `No key specified`
+                break
             }
-            db.get(args[0]).then(logger.log)
+
+            args = {
+                user_id: msg.senderUserID,
+                key: raw_args[0]
+            }
+
+            code = ({ args: args }) => {
+                db.get(args.key).then(logger.log)
+                return `Logged value for key: ${args.key} to console`
+            }
+
             break
         }
         case "test": {
-            client.say(msg.channelName, "FeelsDankMan")
+            name = "test"
+
+            code = () => `FeelsDankMan`
+
             break
         }
         case "say": {
-            if (!isAdmin(msg.senderUserID)) return
-            client.say(msg.channelName, `${args.join(' ')}`);
-            logger.log(`said ${args.join(' ')} in ${msg.channelName}`)
+            name = "say"
+            adminRequired = true
+            tagUser = false
+
+            if (raw_args.length === 0) {
+                code = () => 'No message provided'
+                break
+            }
+
+            args = {
+                user_id: msg.senderUserID,
+                message: raw_args.join(' ')
+            }
+
+            code = ({ args: args }) => args.message
+
             break
         }
         case "sayeverywhere": {
-            if (!isAdmin(msg.senderUserID)) return
-            client.sayEverywhere(await db.getChannelNames(), `${args.join(' ')}`);
-            logger.log(`said ${args.join(' ')} in every channel`)
+            name = "sayeverywhere"
+            adminRequired = true
+            tagUser = false
+            client_callback = client.sayEverywhere
+
+            if (raw_args.length === 0) {
+                code = () => 'No message provided'
+                break
+            }
+
+            args = {
+                user_id: msg.senderUserID,
+                message: raw_args.join(' ')
+            }
+
+            code = ({ args: args }) => args.message
+
+            channel = await db.getChannelNames()
+
             break
         }
         case "channellist": {
-            const channel_names = await db.getChannelNames()
-            client.say(msg.channelName, `@${msg.senderUsername} channellist: ${JSON.stringify(channel_names)}`)
+            name = "channellist"
+
+            code = async () => {
+                const channel_names = await db.getChannelNames()
+                return `channellist: ${JSON.stringify(channel_names)}`
+            }
+
             break
         }
         case "uid": {
-            const id = args[0] ? await twitchapi.getUserId(args[0]) : await twitchapi.getUserId(msg.senderUsername)
-            client.say(msg.channelName, `@${msg.senderUsername} ${id ? id : "user does not exist or is banned"}`)
+            name = "uid"
+
+            args = {
+                command_user: msg.senderUsername,
+                given_user: raw_args[0]
+            }
+
+            code = async ({ args: args }) => {
+                const id = args.given_user ? await twitchapi.getUserId(args.given_user) : await twitchapi.getUserId(args.command_user)
+                return `${id ? id : "user does not exist or is banned"}`
+            }
+
             break
         }
         case "islive": {
-            const channel_name = args[0] ? args[0] : msg.channelName
-            const isLive = await twitchapi.isLive(channel_name)
-            client.say(msg.channelName, `@${msg.senderUsername} channel is ${isLive ? `` : `not`} live`)
+            name = "islive"
+
+            args = {
+                command_user: msg.senderUsername,
+                given_user: raw_args[0]
+            }
+
+            code = async ({ args: args }) => {
+                const channel_name = args.given_user ? args.given_user : args.command_user
+                const isLive = await twitchapi.isLive(channel_name)
+                return `channel is ${isLive ? `` : `not`} live`
+            }
+
             break
         }
         case "isbanphrased": {
-            client.say(msg.channelName, `@${msg.senderUsername} That message is ${await twitchapi.isBannedPhrase(args[0]) ? `` : `not`} banphrased`)
+            name = "isbanphrased"
+
+            if (raw_args.length == 0) {
+                code = () => `Please specify a message for the banphrase check`
+                break
+            }
+
+            args = {
+                message: raw_args[0]
+            }
+
+            code = async ({ args: args }) => {
+                return `That message is ${await twitchapi.isBannedPhrase(args.message) ? `` : `not`} banphrased`
+            }
+
+            break
         }
         default: return
     }
-}
 
-function isAdmin(id) {
-    return (id === '150819483' || id === '124776535' || id === '275711366' || id === '151035078');
+    const command = new Command(name, code, args, channel, user, adminRequired, tagUser)
+    commandExecutor.execute(command, client_callback)
 }
 
 exports.isCommand = (msg) => {
-    if (msg.messageText.charAt(0) === PREFIX) return true;
-    else return false;
+    return msg.messageText.charAt(0) === PREFIX
 }
