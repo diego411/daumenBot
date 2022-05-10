@@ -1,3 +1,4 @@
+const ChannelConfig = require('./types/ChannelConfig')
 const db_client = require('redis').createClient()
 db_client.on('error', (err) => console.log('Redis Client Error', err));
 
@@ -41,7 +42,10 @@ exports.getConfig = async (channel_name) => {
     return null
 }
 
-exports.addConfig = async (config) => {
+exports.addConfig = async (params) => {
+    const config = ChannelConfig.construct_from(params)
+    if (!config) return
+
     let channel_configs = await db_client.get(CONFIGS_KEY)
     if (!channel_configs) {
         db_client.set(CONFIGS_KEY, JSON.stringify([config]))

@@ -9,9 +9,9 @@ const HELIX_STREAMS_URL = "https://api.twitch.tv/helix/streams"
 const BANPHRASE_API_URL = "https://forsen.tv/api/v1/banphrases/test"
 
 exports.getUserId = async (username) => {
-    let data;
+    let response;
     try {
-        data = await axios.get(`${HELIX_USERS_URL}?login=${username}`, {
+        response = await axios.get(`${HELIX_USERS_URL}?login=${username}`, {
             headers: {
                 'Authorization': `Bearer ${OAUTH_TOKEN}`,
                 'Client-Id': CLIENT_ID
@@ -20,7 +20,7 @@ exports.getUserId = async (username) => {
     } catch (e) {
         return null
     }
-    if (data.data.data.length > 0) return data.data.data[0].id
+    if (response.data.data.length > 0) return response.data.data[0].id
     else return null
 }
 

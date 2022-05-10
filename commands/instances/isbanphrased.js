@@ -1,4 +1,4 @@
-const twitchapi = require('../../twitchapi')
+const twitchapi = require('../../controllers/twitch')
 
 module.exports = {
     name: "isbanphrased",

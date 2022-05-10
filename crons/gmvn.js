@@ -1,15 +1,12 @@
 const logger = require('../utils/logger')
 const CronJob = require('cron').CronJob;
 
-let client;
-let db;
-exports.startNamJob = async (c, database) => {
-    client = c
-    db = database
-
-    const job = new CronJob('00 00 06 * * *', function () {
+let client = require('../client');
+let db = require('../database');
+exports.startNamJob = async () => {
+    const job = new CronJob('00 00 06 * * *', async function () {
         logger.log("GFM VIETNAM");
-        client.meEverywhere(db.getChannelNames(), "GOOD FUCKING MORNING VIETNAM NaM 🇻🇳 ")
+        client.meEverywhere(await db.getChannelNames(), "GOOD FUCKING MORNING VIETNAM NaM 🇻🇳 ")
     }, null, true, 'Asia/Pontianak');
     job.start();
     logger.log("started gfmvn job")

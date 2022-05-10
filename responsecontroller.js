@@ -1,5 +1,5 @@
 const logger = require('./utils/logger')
-const twitchapi = require('./twitchapi')
+const twitchapi = require('./controllers/twitch')
 const Cooldown = require('cooldown');
 const Command = require('./commands/Command');
 const Event = require('./events/Event')

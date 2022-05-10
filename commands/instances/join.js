@@ -1,5 +1,6 @@
 const client = require('../../client')
 const db = require('../../database')
+const twitchController = require('../../controllers/twitch')
 
 module.exports = {
     name: "join",
@@ -9,13 +10,23 @@ module.exports = {
             return `Please specify a channel to join`
         channel_name = raw_args[0]
 
-        if (!await require('../../twitchapi').getUserId(channel_name))
+        if (!await twitchController.getUserId(channel_name))
             return `Given channel probably does not exist or is banned`
 
-        const config = require('../../ChannelConfig').construct_from(raw_args)
-        if (!config) return `Could not parse given arguments`
-        await client.join(config.channel_name)
+        let config = { channel_name: raw_args[0] }
 
+        try {
+            for (let i = 0; i < raw_args.length; i++) {
+                let [key, value] = raw_args[i].split(":")
+                if (value == 'true') config[key] = true
+                else if (value == 'false') config[key] = false
+                else config[key] = value
+            }
+        } catch (e) {
+            return `Could not parse given arguments`
+        }
+
+        await client.join(config.channel_name)
         db.addConfig(config)
 
         return `Joined ${channel_name}`
