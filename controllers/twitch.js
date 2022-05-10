@@ -17,11 +17,11 @@ exports.getUserId = async (username) => {
                 'Client-Id': CLIENT_ID
             }
         })
+        if (response.data.data.length > 0) return response.data.data[0].id
     } catch (e) {
         return null
     }
-    if (response.data.data.length > 0) return response.data.data[0].id
-    else return null
+    return null
 }
 
 exports.isLive = async (username) => {
