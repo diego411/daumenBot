@@ -17,8 +17,7 @@
 
   client.init(await database.getChannelNames())
 
-  const gmvn = require('./gmvn')
-  gmvn.startNamJob(client, database)
+  require('./crons/gmvn').startNamJob()
 
   client.on("ready", () => logger.log('Online'));
   client.on("close", (error) => {
