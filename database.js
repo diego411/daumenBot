@@ -30,6 +30,17 @@ exports.getChannelConfigs = async () => {
     return await JSON.parse(await db_client.get(CONFIGS_KEY)) || []
 }
 
+exports.getConfig = async (channel_name) => {
+    let channel_configs = JSON.parse(await db_client.get(CONFIGS_KEY))
+
+    for (config of channel_configs) {
+        if (config.channel_name == channel_name)
+            return config
+    }
+
+    return null
+}
+
 exports.addConfig = async (config) => {
     let channel_configs = await db_client.get(CONFIGS_KEY)
     if (!channel_configs) {

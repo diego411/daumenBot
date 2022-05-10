@@ -1,8 +1,6 @@
-const logger = require("./logger")
-const { ChatClient, IgnoreUnhandledPromiseRejectionsMixin, AlternateMessageModifier } = require("dank-twitch-irc")
+const { ChatClient, IgnoreUnhandledPromiseRejectionsMixin, AlternateMessageModifier } = require("dank-twitch-irc");
+const logger = require("./utils/logger");
 const mySecret = process.env['OAUTH']
-
-const twitchapi = require('./twitchapi')
 
 let client = new ChatClient({
     username: `daumenbot`,
@@ -16,34 +14,29 @@ let client = new ChatClient({
 
 client.use(new IgnoreUnhandledPromiseRejectionsMixin())
 client.use(new AlternateMessageModifier(client));
-const cooldown = require('cooldown');
 
-let cd = {};
-let channelsConfig = [];
-
-exports.init = (channelConfigs) => {
+exports.init = async (channel_names) => {
     client.connect()
-    for (channelConfig of channelConfigs) {
-        this.join(channelConfig)
-        logger.log(`joined ${channelConfig.channel_name}`)
-    }
+    channel_names.map(async channel_name => {
+        await this.join(channel_name)
+    })
 }
 
-exports.say = async (channel, msgText) => {
-    const channelConfig = getChannelConfigForChannel(channel)
-    if (!channelConfig) return
-    if (!channelConfig.talkInOnline && await twitchapi.isLive(channel)) return;
-    if (!cd[channel].fire()) return
-
+const sendMessage = async (channel, msgText, me) => {
     let saidMessage = false
     while (!saidMessage) {
         try {
-            await client.say(channel, msgText)
+            if (me) await client.me(channel, msgText)
+            else await client.say(channel, msgText)
             saidMessage = true
         } catch (e) {
             console.log(e)
         }
     }
+}
+
+exports.say = async (channel, msgText) => {
+    sendMessage(channel, msgText, me = false)
 }
 
 exports.sayEverywhere = async (channels, msgText) => {
@@ -55,30 +48,17 @@ exports.meEverywhere = async (channels, msgText) => {
 }
 
 exports.me = async (channel, msgText) => {
-    const channelConfig = getChannelConfigForChannel(channel)
-    if (!channelConfig) return
-    if (!channelConfig.talkInOnline && await twitchapi.isLive(channel)) return;
-    if (cd[channel].fire()) {
-        try {
-            await client.me(channel, msgText)
-        } catch (e) {
-            console.log(e)
-        }
-    }
+    sendMessage(channel, msgText, me = true)
 }
 
 exports.on = (event, func) => {
     client.on(event, func)
 }
 
-exports.join = (channelConfig) => {
+exports.join = async (channel_name) => {
     try {
-        client.join(channelConfig.channel_name)
-
-        channelsConfig = channelsConfig.filter(config => config.channel_name != channelConfig.channel_name)
-        channelsConfig.push(channelConfig)
-
-        cd[channelConfig.channel_name] = new cooldown(channelConfig.spam)
+        await client.join(channel_name)
+        logger.log(`Joined [#${channel_name}]`)
     } catch (e) {
         console.log(e)
     }
@@ -88,15 +68,13 @@ exports.ping = async () => {
     return client.ping();
 }
 
-exports.part = (channel) => {
-    client.part(channel)
-    delete cd[channel]
-    channelsConfig = channelsConfig.filter(config => channel != config.channel)
+exports.part = (channel_name) => {
+    client.part(channel_name)
 }
 
-function getChannelConfigForChannel(channel_name) {
-    for (channelConfig of channelsConfig) {
-        if (channelConfig.channel_name.includes(channel_name)) return channelConfig
-    }
-    return null
+exports.RESPONSE_TYPE = {
+    SAY: this.say,
+    SAY_EVERYWHERE: this.sayEverywhere,
+    ME: this.me,
+    ME_EVERYWHERE: this.meEverywhere
 }

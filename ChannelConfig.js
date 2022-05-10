@@ -17,15 +17,22 @@ module.exports = class ChannelConfig {
 
     constructor(channel_name, spam = "LOW", talkInOnline = false, weebFilter = "OFF") {
         this.channel_name = channel_name
-        this.spam = spam_cd[spam.toUpperCase()]
+        this.spam = spam_cd[spam.toUpperCase()] ? spam_cd[spam.toUpperCase()] : spam_cd["LOW"]
         this.talkInOnline = talkInOnline
-        this.weebFilter = weeb_freq[weebFilter.toUpperCase()]
+        this.weebFilter = weeb_freq[weebFilter.toUpperCase()] ? weeb_freq[weebFilter.toUpperCase()] : weeb_freq["OFF"]
     }
 
     static construct_from(params) {
         if (params.channel_name)
             return new this(params.channel_name, params.spam, params.talkInOnline, params.weebFilter)
 
+        const config = this.parse_raw_params(params)
+        if (!config) return null
+
+        return this.construct_from(config)
+    }
+
+    static parse_raw_params(params) {
         try {
             let config = { channel_name: params[0] }
             for (let i = 0; i < params.length; i++) {
@@ -34,7 +41,7 @@ module.exports = class ChannelConfig {
                 else if (value == 'false') config[key] = false
                 else config[key] = value
             }
-            return this.construct_from(config)
+            return config
         } catch (e) {
             console.log(e)
             return null
