@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const WED_BASE_URL = process.env["WED_BASE_URL"] || "http://localhost:5000/api/v1/"
+const WED_BASE_URL = `${process.env["WED_URL"]}/api/v1/` || "http://localhost:5000/api/v1/"
 
 exports.weebCheck = async (channel, message) => {
     let response
