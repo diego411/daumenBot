@@ -1,5 +1,10 @@
 const ChannelConfig = require('./types/ChannelConfig')
-const db_client = require('redis').createClient()
+const db_client = require('redis').createClient({
+    socket: {
+        host: process.env["REDIS_HOST"],
+        port: process.env["REDIS_PORT"]
+    }
+})
 db_client.on('error', (err) => console.log('Redis Client Error', err));
 
 const NODE_ENV = process.env.NODE_ENV
