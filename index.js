@@ -5,7 +5,7 @@
   if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
     logger.log("Running in debug mode")
-  }
+  } else logger.log("Running in production mode")
 
   const commandHandler = require('./commands/commandHandler')
   const eventHandler = require('./events/eventHandler')
