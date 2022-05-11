@@ -15,7 +15,15 @@
 
   const client = require('./client');
 
-  client.init(await database.getChannelNames())
+  const channelNames = await database.getChannelNames()
+  if (channelNames.length == 0) {
+    await database.addConfig({
+      channel_name: "daumenbot"
+    })
+    client.init(await database.getChannelNames())
+  } else {
+    client.init(channelNames)
+  }
 
   require('./crons/gmvn').startNamJob()
 
