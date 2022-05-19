@@ -18,7 +18,10 @@ const argsMap = {
 }
 
 exports.buildArgsForCommand = (msg, argFlags) => {
-    const [_, ...raw_args] = msg.messageText.slice(1).split(/ +/g)
+    const [_, ...raw_args] = msg.messageText
+        .slice(1)
+        .split(/ +/g)
+        .map(w => w.replace(/󠀀+/g, ''))
     return buildArgs(msg, argFlags, raw_args)
 }
 
