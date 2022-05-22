@@ -13,6 +13,8 @@
   const database = require('./database')
   await database.connect()
 
+  const api = require('./api/index')
+
   const client = require('./client');
 
   const channelNames = await database.getChannelNames()
