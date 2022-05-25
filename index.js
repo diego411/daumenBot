@@ -13,7 +13,7 @@
   const database = require('./database')
   await database.connect()
 
-  const api = require('./api/index')
+  require('./api/index')
 
   const client = require('./client');
 
@@ -22,8 +22,14 @@
     await database.addConfig({
       channel_name: "daumenbot"
     })
+    await require('./controllers/wlogger').joinChannel("daumenbot")
+    await require('./controllers/wed').joinChannel("daumenbot")
     client.init(await database.getChannelNames())
   } else {
+    channelNames.map(async channelName => {
+      await require('./controllers/wlogger').joinChannel(channelName)
+      await require('./controllers/wed').joinChannel(channelName)
+    })
     client.init(channelNames)
   }
 

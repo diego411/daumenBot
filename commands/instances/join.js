@@ -1,6 +1,8 @@
 const client = require('../../client')
 const db = require('../../database')
 const twitchController = require('../../controllers/twitch')
+const wloggerController = require('../../controllers/wlogger')
+const wedController = require('../../controllers/wed')
 
 module.exports = {
     name: "join",
@@ -28,6 +30,8 @@ module.exports = {
 
         await client.join(config.channel_name)
         db.addConfig(config)
+        wloggerController.joinChannel(config.channel_name)
+        wedController.joinChannel(config.channel_name)
 
         return `Joined ${channel_name}`
     },

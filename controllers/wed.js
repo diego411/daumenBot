@@ -17,3 +17,17 @@ exports.weebCheck = async (channel, message) => {
         return null
     }
 }
+
+exports.joinChannel = async (channel_name) => {
+    let response
+    try {
+        response = await axios({
+            method: 'post',
+            url: `${WED_BASE_URL}channels`,
+            headers: { "Content-Type": "application/json" },
+            data: { channel: channel_name }
+        })
+    } catch (e) {
+        console.log(e)
+    }
+}

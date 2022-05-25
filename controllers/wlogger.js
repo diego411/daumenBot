@@ -31,3 +31,17 @@ exports.statsForChannel = async (channel_name) => {
         return null
     }
 }
+
+exports.joinChannel = async (channel_name) => {
+    let response
+    try {
+        response = await axios({
+            method: 'post',
+            url: `${WLOGGER_BASE_URL}channels`,
+            headers: { "Content-Type": "application/json" },
+            data: { channel_name: channel_name, actively_logged: true }
+        })
+    } catch (e) {
+        console.log(e)
+    }
+}
