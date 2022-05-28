@@ -9,19 +9,21 @@ let channel_cd = {}
 
 let db = require('./database')
 
+let curr_config
+
 exports.sendResponseFor = async (channel, responseReq) => {
+    curr_config = await db.getConfig(channel)
     if (responseReq instanceof Command) executeCommandAndSendResponse(channel, responseReq)
     else if (responseReq instanceof Event) sendResponseForEvent(channel, responseReq)
 }
 
 const channel_cd_fire = async (channel) => {
-    const config = await db.getConfig(channel)
-    if (!config) return false
+    if (!curr_config) return false
 
     if (!channel_cd[channel]) {
-        channel_cd[channel] = new Cooldown(config.spam)
+        channel_cd[channel] = new Cooldown(curr_config.spam)
     }
-    if (!config.talkInOnline && await twitchapi.isLive(channel)) return false
+    if (!curr_config.talkInOnline && await twitchapi.isLive(channel)) return false
     return channel_cd[channel].fire()
 }
 
@@ -54,6 +56,7 @@ const executeCommandAndSendResponse = async (channel, command) => {
 
 const sendResponseForEvent = async (channel, event) => {
     if (!channel_cd_fire(channel)) return
+    if (curr_config.events === "NONE") return
 
     let output
 
