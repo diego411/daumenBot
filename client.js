@@ -27,7 +27,8 @@ const MAX_TRIES = 20
 const sendMessage = async (channel, msgText, me) => {
     let saidMessage = false
     let nTries = 0
-    while (!saidMessage && nTries < MAX_TRIES) {
+    while (!saidMessage) {
+        if (nTries > MAX_TRIES) break
         try {
             if (me) await client.me(channel, msgText)
             else await client.say(channel, msgText)
