@@ -33,9 +33,8 @@ exports.statsForChannel = async (channel_name) => {
 }
 
 exports.joinChannel = async (channel_name) => {
-    let response
     try {
-        response = await axios({
+        await axios({
             method: 'post',
             url: `${WLOGGER_BASE_URL}channels`,
             headers: { "Content-Type": "application/json" },
@@ -44,4 +43,47 @@ exports.joinChannel = async (channel_name) => {
     } catch (e) {
         console.log(e)
     }
+}
+
+opt_user = async (user_name, b) => {
+    let response
+    try {
+        response = await axios({
+            method: 'get',
+            url: `${WLOGGER_BASE_URL}users/${user_name}`,
+            headers: { "Content-Type": "application/json" }
+        })
+        try {
+            if (response.data.exists) {
+                await axios({
+                    method: 'patch',
+                    url: `${WLOGGER_BASE_URL}users/${user_name}`,
+                    headers: { "Content-Type": "application/json" },
+                    data: { opt_out: b }
+                })
+            } else {
+                await axios({
+                    method: 'post',
+                    url: `${WLOGGER_BASE_URL}users`,
+                    headers: { "Content-Type": "application/json" },
+                    data: { user_login: user_name, opted_out: b }
+                })
+            }
+        } catch (e) {
+            console.log(e)
+            return false
+        }
+    } catch (e) {
+        console.log(e)
+        return false
+    }
+    return true
+}
+
+exports.optOutUser = async (user_name) => {
+    return await opt_user(user_name, true)
+}
+
+exports.optInUser = async (user_name) => {
+    return await opt_user(user_name, false)
 }

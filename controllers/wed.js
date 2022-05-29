@@ -19,9 +19,8 @@ exports.weebCheck = async (channel, message) => {
 }
 
 exports.joinChannel = async (channel_name) => {
-    let response
     try {
-        response = await axios({
+        await axios({
             method: 'post',
             url: `${WED_BASE_URL}channels`,
             headers: { "Content-Type": "application/json" },
