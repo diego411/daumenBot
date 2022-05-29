@@ -27,6 +27,14 @@ exports.get = async (key) => {
     return val
 }
 
+exports.set = async (key, value) => {
+    try {
+        await db_client.set(key, value)
+    } catch (e) {
+        console.log(e)
+    }
+}
+
 exports.getChannelNames = async () => {
     let channelConfigs = await this.getChannelConfigs()
     return channelConfigs.map(config => config.channel_name)

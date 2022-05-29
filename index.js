@@ -39,7 +39,10 @@
 
   require('./crons/gmvn').startNamJob()
 
-  client.on("ready", () => logger.log('Online'));
+  client.on("ready", () => {
+    logger.log('Online')
+    database.set("start_time", Date.now())
+  });
   client.on("close", (error) => {
     if (error != null) {
       console.error("Client closed due to error", error);
