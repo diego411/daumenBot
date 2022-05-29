@@ -12,6 +12,8 @@ const CONFIGS_KEY = NODE_ENV === "production"
     ? "channel_configs"
     : "debug_channel_configs"
 
+const WHITELIST_KEY = "whitelist"
+
 exports.connect = async () => {
     await db_client.connect()
 }
@@ -73,4 +75,12 @@ exports.removeConfig = async (channel_name) => {
     if (!channel_configs) return
     channel_configs = JSON.parse(channel_configs)
     db_client.set(CONFIGS_KEY, JSON.stringify(channel_configs.filter(config => config.channel_name !== channel_name)))
+}
+
+exports.getWhitelist = async () => {
+    return await db_client.sMembers(WHITELIST_KEY)
+}
+
+exports.addWhitelistTerm = async (term) => {
+    db_client.sAdd(WHITELIST_KEY, term)
 }

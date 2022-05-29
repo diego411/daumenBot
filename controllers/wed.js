@@ -30,3 +30,16 @@ exports.joinChannel = async (channel_name) => {
         console.log(e)
     }
 }
+
+exports.addWhitelistTerm = async (term) => {
+    try {
+        await axios({
+            method: 'post',
+            url: `${WED_BASE_URL}whitelist`,
+            headers: { "Content-Type": "application/json" },
+            data: { term: term }
+        })
+    } catch (e) {
+        console.log(e)
+    }
+}
