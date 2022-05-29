@@ -13,7 +13,7 @@ module.exports = {
         const randomQuote = stats.messages[Math.floor(Math.random() * stats.messages.length)]
 
         if (stats.message_count == 0) return `I have no weeb lines logged for this user NaM 👍`
-        return `[#${randomQuote.channel}] (${timeUtil.relativeTime(randomQuote.post_timestamp)}) ${randomQuote.sender_login}: ${randomQuote.content}`
+        return `[#${randomQuote.channel}] (${timeUtil.relativeTime(randomQuote.post_timestamp * 1000)} ago) ${randomQuote.sender_login}: ${randomQuote.content}`
     },
     trigger: (command_name) => command_name === "randomweebdquote" || command_name === "rwq",
     cooldown: 2000,

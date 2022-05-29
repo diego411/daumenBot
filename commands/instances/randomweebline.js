@@ -13,7 +13,7 @@ module.exports = {
         const randomLine = stats.messages[Math.floor(Math.random() * stats.messages.length)]
 
         if (stats.message_count == 0) return `I have no weeb line logged in this channel NaM 👍`
-        return `(${timeUtil.relativeTime(randomLine.post_timestamp)}) ${randomLine.sender_login}: ${randomLine.content}`
+        return `(${timeUtil.relativeTime(randomLine.post_timestamp * 1000)} ago) ${randomLine.sender_login}: ${randomLine.content}`
     },
     trigger: (command_name) => command_name === "randomweebline" || command_name === "rwl",
     cooldown: 2000,

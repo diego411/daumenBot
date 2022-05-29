@@ -1,25 +1,34 @@
-const moment = require('moment')
-
-moment.updateLocale('en', {
-    relativeTime: {
-        future: 'in %s',
-        past: '%s ago',
-        s: function (number, withoutSuffix) {
-            return withoutSuffix ? 'now' : 'a few seconds';
-        },
-        m: '1m',
-        mm: '%dm',
-        h: '1h',
-        hh: '%dh',
-        d: '1d',
-        dd: '%dd',
-        M: '1mth',
-        MM: '%dmth',
-        y: '1y',
-        yy: '%dy'
+//FDM
+const timeSegments = [
+    {
+        conversionConstant: 86400000,
+        identifier: "d"
+    },
+    {
+        conversionConstant: 3600000,
+        identifier: "h"
+    },
+    {
+        conversionConstant: 60000,
+        identifier: "min"
+    },
+    {
+        conversionConstant: 1000,
+        identifier: "sec"
     }
-});
+]
 
-exports.relativeTime = (timeInSec) => {
-    return moment(timeInSec * 1000).fromNow()
+exports.relativeTime = (timeStampInMs) => {
+    let remainder = Date.now() - timeStampInMs
+
+    let vals = []
+    for (segment of timeSegments) {
+        const quotient = Math.round(remainder / segment.conversionConstant, 0)
+        if (quotient != 0) vals.push(quotient + segment.identifier)
+        remainder = remainder % segment.conversionConstant
+    }
+
+    vals = vals.splice(0, 2)
+
+    return vals.join(' ')
 }
