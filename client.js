@@ -22,13 +22,17 @@ exports.init = async (channel_names) => {
     })
 }
 
+const MAX_TRIES = 20
+
 const sendMessage = async (channel, msgText, me) => {
     let saidMessage = false
-    while (!saidMessage) {
+    let nTries = 0
+    while (!saidMessage && nTries < MAX_TRIES) {
         try {
             if (me) await client.me(channel, msgText)
             else await client.say(channel, msgText)
             saidMessage = true
+            nTries++
         } catch (e) {
             console.log(e)
         }
