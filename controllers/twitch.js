@@ -7,6 +7,7 @@ const HELIX_USERS_URL = "https://api.twitch.tv/helix/users"
 const HELIX_STREAMS_URL = "https://api.twitch.tv/helix/streams"
 
 const BANPHRASE_API_URL = "https://forsen.tv/api/v1/banphrases/test"
+const PB2_BANPHRASE_API_URL = "https://paj.pajbot.com/api/channel/22484632/moderation/check_message?message=";
 
 exports.getUserId = async (username) => {
     let response;
@@ -38,5 +39,6 @@ exports.isLive = async (username) => {
 
 exports.isBannedPhrase = async (phrase) => {
     const response = await axios.post(BANPHRASE_API_URL, { message: phrase }, { headers: { "Content-Type": "application/json" } })
-    return response.data.banned
+    const pb2response = await axios.get(PB2_BANPHRASE_API_URL+encodeURIComponent(phrase));
+    return response.data.banned || pb2response.data.banned;
 }
