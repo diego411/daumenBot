@@ -16,5 +16,6 @@ module.exports = {
         return `Whitelisted term: ${term}`
     },
     cooldown: 2000,
-    adminRequired: true
+    adminRequired: true,
+    banphraseCheckRequired: true
 }

@@ -6,5 +6,6 @@ module.exports = {
     },
     cooldown: 2000,
     adminRequired: true,
-    tagUser: false
+    tagUser: false,
+    banphraseCheckRequired: true
 }

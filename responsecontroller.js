@@ -1,5 +1,5 @@
 const logger = require('./utils/logger')
-const twitchapi = require('./controllers/twitch')
+const twitchController = require('./controllers/twitch')
 const Cooldown = require('cooldown');
 const Command = require('./commands/Command');
 const Event = require('./events/Event')
@@ -23,7 +23,7 @@ const channel_cd_fire = async (channel) => {
     if (!channel_cd[channel]) {
         channel_cd[channel] = new Cooldown(curr_config.spam)
     }
-    if (!curr_config.talkInOnline && await twitchapi.isLive(channel)) return false
+    if (!curr_config.talkInOnline && await twitchController.isLive(channel)) return false
     return channel_cd[channel].fire()
 }
 
@@ -47,8 +47,10 @@ const executeCommandAndSendResponse = async (channel, command) => {
     }
 
     if (output) {
-        const message = command.tagUser ? `@${user} ${output}` : output
-        await command.response_callback(channel, message)
+        let message = command.tagUser ? `@${user} ${output}` : output
+        if (command.banphraseCheckRequired && await twitchController.isBannedPhrase(message))
+            await command.response_callback(channel, command.tagUser ? `@${user} [BANPHRASED]` : `[BANPHRASED]`)
+        else await command.response_callback(channel, message)
     }
 
     logger.log(`${user} executed command: ${command.name} in [#${channel}] with output: ${output}`)

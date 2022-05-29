@@ -39,6 +39,6 @@ exports.isLive = async (username) => {
 
 exports.isBannedPhrase = async (phrase) => {
     const response = await axios.post(BANPHRASE_API_URL, { message: phrase }, { headers: { "Content-Type": "application/json" } })
-    const pb2response = await axios.get(PB2_BANPHRASE_API_URL+encodeURIComponent(phrase));
+    const pb2response = await axios.get(PB2_BANPHRASE_API_URL + encodeURIComponent(phrase));
     return response.data.banned || pb2response.data.banned;
 }

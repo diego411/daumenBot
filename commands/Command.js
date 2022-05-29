@@ -11,7 +11,8 @@ module.exports = class Command {
         response_callback = RESPONSE_TYPE.SAY,
         channels = (msg) => msg.channelName,
         adminRequired = false,
-        tagUser = true
+        tagUser = true,
+        banphraseCheckRequired = false
     ) {
         this.name = name
         this.code = code
@@ -22,11 +23,13 @@ module.exports = class Command {
         this.channels = channels
         this.adminRequired = adminRequired
         this.tagUser = tagUser
+        this.banphraseCheckRequired = banphraseCheckRequired
     }
 
     static construct_from(params) {
         if (!params.name) return null
-        return new this(params.name, params.code, params.arg_flags, params.trigger, params.cooldown, params.response_callback, params.channels, params.adminRequired, params.tagUser)
+        return new this(params.name, params.code, params.arg_flags, params.trigger, params.cooldown,
+            params.response_callback, params.channels, params.adminRequired, params.tagUser, params.banphraseCheckRequired)
     }
 
     injectArgs(args) {

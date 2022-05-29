@@ -17,5 +17,6 @@ module.exports = {
     },
     trigger: (command_name) => command_name === "randomweebdquote" || command_name === "rwq",
     cooldown: 2000,
-    tagUser: false
+    tagUser: false,
+    banphraseCheckRequired: true
 }

@@ -8,5 +8,6 @@ module.exports = {
     response_callback: require('../../client').RESPONSE_TYPE.SAY_EVERYWHERE,
     channels: (msg) => require('../../database').getChannelNames(),
     adminRequired: true,
-    tagUser: false
+    tagUser: false,
+    banphraseCheckRequired: true
 }
