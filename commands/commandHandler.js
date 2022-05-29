@@ -29,7 +29,8 @@ exports.init = () => {
 this.init()
 
 exports.handle = async (msg) => {
-    if (msg.displayName === "daumenbot") return;
+    if (msg.displayName === "daumenbot") return
+    if (!isCommand(msg)) return
 
     let [command_name, ..._] = msg.messageText.slice(PREFIX.length).split(/ +/g);
 
@@ -43,6 +44,6 @@ exports.handle = async (msg) => {
     })
 }
 
-exports.isCommand = (msg) => {
+isCommand = (msg) => {
     return msg.messageText.charAt(0) === PREFIX
 }
