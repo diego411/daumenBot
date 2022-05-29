@@ -16,7 +16,7 @@ module.exports = {
         return `(${timeUtil.relativeTime(randomLine.post_timestamp * 1000)} ago) ${randomLine.sender_login}: ${randomLine.content}`
     },
     trigger: (command_name) => command_name === "randomweebline" || command_name === "rwl",
-    cooldown: 2000,
+    cooldown: 10000,
     tagUser: false,
     banphraseCheckRequired: true
 }

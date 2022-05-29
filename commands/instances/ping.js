@@ -18,6 +18,6 @@ module.exports = {
 
         return `Pong! Uptime: ${uptime}. Free Memory: ${freeMemory}MB / ${totalMemory}MB. Ping to TMI approx: ${dateAfterPing - dateNow} ms`
     },
-    cooldown: 10000,
+    cooldown: 15000,
     tagUser: false
 }

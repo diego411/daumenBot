@@ -10,5 +10,5 @@ module.exports = {
         const message = raw_args[0]
         return `That message is ${await twitchapi.isBannedPhrase(message) ? `` : `not`} banphrased`
     },
-    cooldown: 5000
+    cooldown: 10000
 }

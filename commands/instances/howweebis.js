@@ -13,5 +13,5 @@ module.exports = {
         return `I have a total of ${stats.message_count} weeb lines logged for ${user_name} (Total score: ${stats.score}) NaM`
     },
     trigger: (command_name) => command_name === "howweebis" || command_name === "hwis",
-    cooldown: 2000
+    cooldown: 10000
 }

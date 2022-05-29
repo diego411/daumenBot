@@ -16,7 +16,7 @@ module.exports = {
         return `[#${randomQuote.channel}] (${timeUtil.relativeTime(randomQuote.post_timestamp * 1000)} ago) ${randomQuote.sender_login}: ${randomQuote.content}`
     },
     trigger: (command_name) => command_name === "randomweebdquote" || command_name === "rwq",
-    cooldown: 2000,
+    cooldown: 10000,
     tagUser: false,
     banphraseCheckRequired: true
 }

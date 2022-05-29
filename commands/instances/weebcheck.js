@@ -16,5 +16,5 @@ module.exports = {
         return `The provided message is ${stats.is_weeb ? `` : `not`} weeb. (Confidence: ${Number(stats.confidence * 100).toFixed(2)}%)`
     },
     trigger: (command_name) => command_name === "weebcheck" || command_name === "wc",
-    cooldown: 2000
+    cooldown: 10000
 }
