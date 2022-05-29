@@ -32,10 +32,10 @@ const sendMessage = async (channel, msgText, me) => {
             if (me) await client.me(channel, msgText)
             else await client.say(channel, msgText)
             saidMessage = true
-            nTries++
         } catch (e) {
             console.log(e)
         }
+        nTries++
     }
 }
 
