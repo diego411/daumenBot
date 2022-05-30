@@ -1,11 +1,12 @@
 const WLoggerController = require('../../controllers/wlogger')
 const timeUtil = require('../../utils/time')
+const formatUser = require('../../utils/userFormatter')
 
 module.exports = {
     name: "randomweebdquote",
     arg_flags: ["raw_args", "sender_name"],
     code: async ({ raw_args, senderUsername }) => {
-        const user_name = raw_args[0] || senderUsername
+        const user_name = formatUser(raw_args[0]) || senderUsername
 
         const stats = await WLoggerController.statsForUser(user_name)
         if (!stats) return `Encountered problem with wlogger api`
