@@ -16,7 +16,7 @@ module.exports = {
         if (!await twitchController.getUserId(channel_name))
             return `Given channel probably does not exist or is banned`
 
-        let config = { channel_name: formatUser(raw_args[0].toString()) }
+        let config = { channel_name: formatUser(raw_args[0]).toString() }
 
         try {
             for (let i = 0; i < raw_args.length; i++) {
