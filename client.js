@@ -1,8 +1,6 @@
-const logger = require("./logger")
-const { ChatClient, IgnoreUnhandledPromiseRejectionsMixin } = require("dank-twitch-irc")
+const { ChatClient, IgnoreUnhandledPromiseRejectionsMixin, AlternateMessageModifier } = require("dank-twitch-irc");
+const logger = require("./utils/logger");
 const mySecret = process.env['OAUTH']
-
-const twitchapi = require('./twitchapi')
 
 let client = new ChatClient({
     username: `daumenbot`,
@@ -14,108 +12,74 @@ let client = new ChatClient({
     },
 });
 
-let i = 0
-
 client.use(new IgnoreUnhandledPromiseRejectionsMixin())
-const cooldown = require('cooldown');
+client.use(new AlternateMessageModifier(client));
 
-let cd = {};
-const cdMap = {
-    "LOW": 10000,
-    "MID": 5000,
-    "HIGH": 2000,
-    "VERYHIGH": 1000
-}
-let channelsConfig = [];
-
-const init = (channelConfigs) => {
+exports.init = async (channel_names) => {
     client.connect()
-    for (channelConfig of channelConfigs) {
-        this.join(channelConfig)
-        logger.log(`joined ${channelConfig.channel}`)
-    }
+    channel_names.map(async channel_name => {
+        await this.join(channel_name)
+    })
 }
 
-const say = async (channel, msgText) => {
-    const channelConfig = getChannelConfigForChannel(channel)
-    if (!channelConfig) return
-    if (!channelConfig.talkInOnline && await twitchapi.isLive(channel)) return;
-    if (cd[channel].fire()) {
+const MAX_TRIES = 20
+
+const sendMessage = async (channel, msgText, me) => {
+    let saidMessage = false
+    let nTries = 0
+    while (!saidMessage) {
+        if (nTries > MAX_TRIES) break
         try {
-            await client.say(channel, vary(msgText))
+            if (me) await client.me(channel, msgText)
+            else await client.say(channel, msgText)
+            saidMessage = true
         } catch (e) {
-            logger.log(e)
+            console.log(e)
         }
+        nTries++
     }
 }
 
-const sayEverywhere = async (channels, msgText) => {
-    channels.map(async (channel) => await say(channel, msgText))
+exports.say = async (channel, msgText) => {
+    sendMessage(channel, msgText, me = false)
 }
 
-const meEverywhere = async (channels, msgText) => {
-    channels.map(async channel => await me(channel, msgText))
+exports.sayEverywhere = async (channels, msgText) => {
+    channels.map(async (channel) => await this.say(channel, msgText))
 }
 
-const me = async (channel, msgText) => {
-    const channelConfig = getChannelConfigForChannel(channel)
-    if (!channelConfig) return
-    if (!channelConfig.talkInOnline && await twitchapi.isLive(channel)) return;
-    if (cd[channel].fire()) {
-        try {
-            await client.me(channel, msgText)
-        } catch (e) {
-            logger.log(e)
-        }
-    }
+exports.meEverywhere = async (channels, msgText) => {
+    channels.map(async channel => await this.me(channel, msgText))
 }
 
-const on = (event, func) => {
+exports.me = async (channel, msgText) => {
+    sendMessage(channel, msgText, me = true)
+}
+
+exports.on = (event, func) => {
     client.on(event, func)
 }
 
-const join = (channelConfig) => {
+exports.join = async (channel_name) => {
     try {
-        client.join(channelConfig.channel)
-
-        channelsConfig = channelsConfig.filter(config => config.channel != channelConfig.channel)
-        channelsConfig.push(channelConfig)
-
-        cd[channelConfig.channel] = new cooldown(cdMap[channelConfig.spam])
+        await client.join(channel_name)
+        logger.log(`Joined [#${channel_name}]`)
     } catch (e) {
-        logger.log(e)
+        console.log(e)
     }
 }
 
-const ping = async () => {
+exports.ping = async () => {
     return client.ping();
 }
 
-const part = (channel) => {
-    client.part(channel)
-    delete cd[channel]
-    channelsConfig = channelsConfig.filter(config => channel != config.channel)
+exports.part = (channel_name) => {
+    client.part(channel_name)
 }
 
-function vary(msgText) {
-    i++;
-    if (i % 2 == 0) return `${msgText} ⠀`;
-    else return `${msgText}`;
+exports.RESPONSE_TYPE = {
+    SAY: this.say,
+    SAY_EVERYWHERE: this.sayEverywhere,
+    ME: this.me,
+    ME_EVERYWHERE: this.meEverywhere
 }
-
-function getChannelConfigForChannel(channelname) {
-    for (channelConfig of channelsConfig) {
-        if (channelConfig.channel.includes(channelname)) return channelConfig
-    }
-    return null
-}
-
-exports.init = init
-exports.say = say
-exports.sayEverywhere = sayEverywhere
-exports.meEverywhere = meEverywhere
-exports.me = me
-exports.on = on
-exports.join = join
-exports.part = part
-exports.ping = ping

@@ -1,32 +1,48 @@
 (async function () {
 
-  const logger = require('./logger');
+  const logger = require('./utils/logger');
 
   if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
     logger.log("Running in debug mode")
-  }
+  } else logger.log("Running in production mode")
 
-  const commandHandler = require('./messagehandlers/commandHandler')
-  const weebHandler = require('./messagehandlers/weebHandler')
-  const eventHandler = require('./messagehandlers/eventHandler')
+  const commandHandler = require('./commands/commandHandler')
+  const eventHandler = require('./events/eventHandler')
 
-  const replitConfig = require('./replitConfig')
-  replitConfig.config()
+  const database = require('./database')
+  await database.connect()
 
-  const database = await require('./database').init()
-
-  commandHandler.init(database)
-  weebHandler.init(database)
+  require('./api/index')
 
   const client = require('./client');
 
-  client.init(database.getChannelConfigs())
+  const channelNames = await database.getChannelNames()
+  if (channelNames.length == 0) {
+    await database.addConfig({
+      channel_name: "daumenbot"
+    })
+    await require('./controllers/wlogger').joinChannel("daumenbot")
+    await require('./controllers/wed').joinChannel("daumenbot")
+    client.init(await database.getChannelNames())
+  } else {
+    channelNames.map(async channelName => {
+      const wloggerController = require('./controllers/wlogger')
 
-  const gmvn = require('./gmvn')
-  gmvn.startNamJob(client, database)
+      await wloggerController.joinChannel(channelName)
+      await require('./controllers/wed').joinChannel(channelName)
 
-  client.on("ready", () => logger.log('Online'));
+      wloggerController.optOutUser("daumenbot")
+    })
+    client.init(channelNames)
+  }
+
+  require('./crons/gmvn').startNamJob()
+
+  client.on("ready", () => {
+    logger.log('Online')
+    database.set("start_time", Date.now())
+  });
   client.on("close", (error) => {
     if (error != null) {
       console.error("Client closed due to error", error);
@@ -34,43 +50,9 @@
   });
 
   client.on("PRIVMSG", async (msg) => {
-    let msgType = await getMsgType(msg)
-
-    switch (msgType) {
-      case MSGTYPES.COMMAND: {
-        commandHandler.handle(msg, client)
-        break
-      }
-      case MSGTYPES.WEEBMSG: {
-        weebHandler.handle(msg, client)
-        break
-      }
-      case MSGTYPES.EVENT: {
-        eventHandler.handle(msg, client)
-        break
-      }
-      default: return
-    }
+    eventHandler.handle(msg)
+    commandHandler.handle(msg)
   })
-
-  const getMsgType = async (msg) => {
-    if (commandHandler.isCommand(msg)) return MSGTYPES.COMMAND
-    if (await weebHandler.weebDetected(msg)) return MSGTYPES.WEEBMSG
-    if (isEvent(msg)) return MSGTYPES.EVENT
-    return MSGTYPES.NONE
-  }
-
-  const MSGTYPES = {
-    COMMAND: 0,
-    WEEBMSG: 1,
-    EVENT: 2,
-    NONE: 3
-  }
-
-  //TODO
-  function isEvent(msg) {
-    return true;
-  }
 
 }())
 
