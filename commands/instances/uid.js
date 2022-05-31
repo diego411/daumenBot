@@ -6,9 +6,14 @@ module.exports = {
     arg_flags: ["raw_args", "sender"],
     code: async ({ raw_args, senderUserID }) => {
         const given_user = formatUser(raw_args[0])
-        if (given_user) {
+        let id;
+        if (!raw_args[0]) {
+            id = senderUserID;
+            return id.toString()
+        }
+        else if (given_user) {
             console.log(raw_args)
-            const id = given_user ? await twitchapi.getUserId(given_user) : senderUserID
+            id = await twitchapi.getUserId(given_user)
             return `${id ? id : `User does not exist or is banned`}`
         }
         else {
