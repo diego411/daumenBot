@@ -1,5 +1,5 @@
 const WLoggerController = require('../../controllers/wlogger')
-const formatUser = require('../../utils/userFormatter')
+const formatUser = require('../../utils/formatter').formatUser
 
 module.exports = {
     name: "howweebis",

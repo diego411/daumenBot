@@ -3,7 +3,7 @@ const db = require('../../database')
 const twitchController = require('../../controllers/twitch')
 const wloggerController = require('../../controllers/wlogger')
 const wedController = require('../../controllers/wed')
-const formatUser = require('../../utils/userFormatter')
+const formatUser = require('../../utils/formatter').formatUser
 
 module.exports = {
     name: "join",
@@ -16,7 +16,7 @@ module.exports = {
         if (!await twitchController.getUserId(channel_name))
             return `Given channel probably does not exist or is banned`
 
-        let config = { channel_name: formatUser(raw_args[0]) }
+        let config = { channel_name: channel_name.toString() }
 
         try {
             for (let i = 0; i < raw_args.length; i++) {

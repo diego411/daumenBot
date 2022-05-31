@@ -1,6 +1,6 @@
 const db = require('../../database')
 const client = require('../../client')
-const formatUser = require('../../utils/userFormatter')
+const formatUser = require('../../utils/formatter').formatUser
 
 module.exports = {
     name: "part",

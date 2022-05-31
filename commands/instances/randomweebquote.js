@@ -1,6 +1,6 @@
 const WLoggerController = require('../../controllers/wlogger')
 const timeUtil = require('../../utils/time')
-const formatUser = require('../../utils/userFormatter')
+const formatUser = require('../../utils/formatter').formatUser
 
 module.exports = {
     name: "randomweebdquote",
