@@ -20,13 +20,13 @@ const argsMap = {
 exports.buildArgsForCommand = (msg, argFlags) => {
     const [_, ...raw_args] = msg.messageText
         .slice(1)
-        .split(/ +/g)
-        .map(w => w.replace(/󠀀+/g, ''))
+        .split(/\s+/g)
+        .map(w => w.replace(/\u{E0000}/gu, ''))
     return buildArgs(msg, argFlags, raw_args)
 }
 
 exports.buildArgsForEvent = (msg, argFlags) => {
-    const raw_args = msg.messageText.split(/ +/g)
+    const raw_args = msg.messageText.split(/\s+/g)
     return buildArgs(msg, argFlags, raw_args)
 }
 

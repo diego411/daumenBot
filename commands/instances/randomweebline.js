@@ -1,11 +1,19 @@
 const WLoggerController = require('../../controllers/wlogger')
 const timeUtil = require('../../utils/time')
+const formatUser = require('../../utils/formatter').formatUser
 
 module.exports = {
     name: "randomweebline",
     arg_flags: ["raw_args", "sender_name", "channel_name"],
     code: async ({ raw_args, channelName }) => {
-        const channel_name = raw_args[0] || channelName
+        let channel_name
+
+        if (!raw_args[0])
+            channel_name = channelName
+        else channel_name = formatUser(raw_args[0])
+
+        if (!channel_name)
+            return `Invalid channel provided`
 
         const stats = await WLoggerController.statsForChannel(channel_name)
         if (!stats) return `Encountered problem with wlogger api`
