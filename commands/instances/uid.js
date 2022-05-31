@@ -8,7 +8,7 @@ module.exports = {
         const given_user = formatUser(raw_args[0])
         let id;
         if (!raw_args[0]) {
-            id = senderUserID;
+            id = senderUserID
             return id.toString()
         }
         else if (given_user) {
