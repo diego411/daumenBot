@@ -23,7 +23,7 @@ const channel_cd_fire = async (channel) => {
     if (!channel_cd[channel]) {
         channel_cd[channel] = new Cooldown(curr_config.spam)
     }
-    if (!curr_config.talkInOnline && await twitchController.isLive(channel)) return false
+    if ((!curr_config.talkInOnline) && (await twitchController.isLive(channel))) return false
     return channel_cd[channel].fire()
 }
 
@@ -36,7 +36,7 @@ const executeCommandAndSendResponse = async (channel, command) => {
     if (!user_cd[user][command.name]) user_cd[user][command.name] = new Cooldown(command.cooldown)
     if (!user_cd[user][command.name].fire()) return
 
-    if (!channel_cd_fire(channel)) return
+    if (!await channel_cd_fire(channel)) return
 
     let output;
     try {
@@ -57,7 +57,7 @@ const executeCommandAndSendResponse = async (channel, command) => {
 }
 
 const sendResponseForEvent = async (channel, event) => {
-    if (!channel_cd_fire(channel)) return
+    if (!await channel_cd_fire(channel)) return
     if (curr_config.events === "NONE") return
 
     let output
