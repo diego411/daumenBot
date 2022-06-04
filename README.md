@@ -1,4 +1,7 @@
 # Daumenbot
+
+![nam](assets/namapprove.png)
+
 This is a dank twitch bot i primarly made for learning purposes. The bot is divided into three services at this moment. This is the actual twitch client that reads the commands typed in chat and responds to them. Other than that a [logging service](https://github.com/diego411/wlogger) and a [weeb emote detection service](https://github.com/diego411/WED) are part of the architecture. For more information on those parts of the bot refer to the linked repositories.
 
 ## Get the bot
