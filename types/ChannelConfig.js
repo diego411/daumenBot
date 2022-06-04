@@ -1,6 +1,7 @@
 const spam_cd = {
-    LOW: 10000,
-    MID: 5000,
+    VER_LOW: 10000,
+    LOW: 5000,
+    MID: 3000,
     HIGH: 2000,
     VERY_HIGH: 1000
 }
@@ -20,7 +21,7 @@ const event_enum = {
 
 module.exports = class ChannelConfig {
 
-    constructor(channel_name, spam = "LOW", talkInOnline = false, weebFilter = "OFF", events = "ALL") {
+    constructor(channel_name, spam = "MID", talkInOnline = false, weebFilter = "OFF", events = "ALL") {
         this.channel_name = channel_name
         this.spam = spam_cd[spam.toUpperCase()] || spam_cd["LOW"]
         this.talkInOnline = talkInOnline
