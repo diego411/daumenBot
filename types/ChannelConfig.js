@@ -14,11 +14,6 @@ const weeb_freq = {
     VERY_LOW: 100
 }
 
-const event_enum = {
-    NONE: "NONE",
-    ALL: "ALL"
-}
-
 module.exports = class ChannelConfig {
 
     constructor(channel_name, spam = "MID", talkInOnline = false, weebFilter = "OFF", events = "ALL") {
@@ -26,7 +21,7 @@ module.exports = class ChannelConfig {
         this.spam = spam_cd[spam.toUpperCase()] || spam_cd["LOW"]
         this.talkInOnline = talkInOnline
         this.weebFilter = weeb_freq[weebFilter.toUpperCase()] || weeb_freq["OFF"]
-        this.events = event_enum[events]
+        this.events = events.toUpperCase() || "ALL"
     }
 
     static construct_from(params) {

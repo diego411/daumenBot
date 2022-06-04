@@ -57,8 +57,10 @@ const executeCommandAndSendResponse = async (channel, command) => {
 }
 
 const sendResponseForEvent = async (channel, event) => {
-    if (!await channel_cd_fire(channel)) return
     if (curr_config.events === "NONE") return
+    if (curr_config.events != "ALL" && !curr_config.events.includes(event.name)) return
+
+    if (!await channel_cd_fire(channel)) return
 
     let output
 
