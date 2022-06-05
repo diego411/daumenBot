@@ -1,4 +1,5 @@
-const axios = require('axios');
+const axios = require('axios')
+const logger = require('../utils/logger')
 
 const WLOGGER_BASE_URL = `${process.env["WLOGGER_URL"]}api/v1/`
 
@@ -12,7 +13,7 @@ exports.statsForUser = async (user_name) => {
         })
         return response.data
     } catch (e) {
-        console.log(e)
+        logger.logAxiosError(e)
         return null
     }
 }
@@ -27,7 +28,7 @@ exports.statsForChannel = async (channel_name) => {
         })
         return response.data
     } catch (e) {
-        console.log(e)
+        logger.logAxiosError(e)
         return null
     }
 }
@@ -41,7 +42,7 @@ exports.joinChannel = async (channel_name) => {
             data: { channel_name: channel_name, actively_logged: true }
         })
     } catch (e) {
-        console.log(e)
+        logger.logAxiosError(e)
     }
 }
 
@@ -70,11 +71,11 @@ opt_user = async (user_name, b) => {
                 })
             }
         } catch (e) {
-            console.log(e)
+            logger.logAxiosError(e)
             return false
         }
     } catch (e) {
-        console.log(e)
+        logger.logAxiosError(e)
         return false
     }
     return true

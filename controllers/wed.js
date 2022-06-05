@@ -1,4 +1,5 @@
-const axios = require('axios');
+const axios = require('axios')
+const logger = require('../utils/logger')
 
 const WED_BASE_URL = `${process.env["WED_URL"]}api/v1/`
 
@@ -13,7 +14,7 @@ exports.weebCheck = async (channel, message) => {
         })
         return response.data
     } catch (e) {
-        console.log(e)
+        logger.logAxiosError(e)
         return null
     }
 }
@@ -27,7 +28,7 @@ exports.joinChannel = async (channel_name) => {
             data: { channel: channel_name }
         })
     } catch (e) {
-        console.log(e)
+        logger.logAxiosError(e)
     }
 }
 
@@ -40,6 +41,6 @@ exports.addWhitelistTerm = async (term) => {
             data: { term: term }
         })
     } catch (e) {
-        console.log(e)
+        logger.logAxiosError(e)
     }
 }

@@ -1,4 +1,5 @@
-const axios = require('axios');
+const axios = require('axios')
+const logger = require('../utils/logger')
 
 const OAUTH_TOKEN = process.env["OAUTH"]
 const CLIENT_ID = process.env["CLIENT_ID"]
@@ -20,6 +21,7 @@ exports.getUserId = async (username) => {
         })
         if (response.data.data.length > 0) return response.data.data[0].id
     } catch (e) {
+        logger.logAxiosError(e)
         return null
     }
     return null
@@ -38,7 +40,13 @@ exports.isLive = async (username) => {
 }
 
 exports.isBannedPhrase = async (phrase) => {
-    const response = await axios.post(BANPHRASE_API_URL, { message: phrase }, { headers: { "Content-Type": "application/json" } })
-    const pb2response = await axios.get(PB2_BANPHRASE_API_URL + encodeURIComponent(phrase));
-    return response.data.banned || pb2response.data.banned;
+    let response, pb2response
+    try {
+        response = await axios.post(BANPHRASE_API_URL, { message: phrase }, { headers: { "Content-Type": "application/json" } })
+        pb2response = await axios.get(PB2_BANPHRASE_API_URL + encodeURIComponent(phrase));
+        return response.data.banned || pb2response.data.banned;
+    } catch (e) {
+        logger.logAxiosError(e)
+        return null
+    }
 }

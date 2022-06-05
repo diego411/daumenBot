@@ -8,3 +8,13 @@ exports.log = (msg) => {
         date_ob.getSeconds()
     console.log("[" + timestamp + "]" + " " + JSON.stringify(msg))
 }
+
+exports.logAxiosError = (error) => {
+    let errMsg
+    try {
+        errMsg = `${error.code} for ${error.config.method.toUpperCase()} request on url: ${error.config.url}`
+        this.log(errMsg)
+    } catch (e) {
+        this.log(`Could not parse axios error.`)
+    }
+}
