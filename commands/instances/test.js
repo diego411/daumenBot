@@ -1,5 +1,5 @@
 module.exports = {
     name: "test",
-    code: () => `FeelsDankMan`,
+    code: () => `FeelsDankMan FeelsDankMan`,
     cooldown: 5000,
 }
