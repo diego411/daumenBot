@@ -19,19 +19,6 @@ exports.weebCheck = async (channel, message) => {
     }
 }
 
-exports.joinChannel = async (channel_name) => {
-    try {
-        await axios({
-            method: 'post',
-            url: `${WED_BASE_URL}channels`,
-            headers: { "Content-Type": "application/json" },
-            data: { channel: channel_name }
-        })
-    } catch (e) {
-        logger.logAxiosError(e)
-    }
-}
-
 exports.addWhitelistTerm = async (term) => {
     try {
         await axios({

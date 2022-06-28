@@ -32,7 +32,6 @@ module.exports = {
         await client.join(config.channel_name)
         db.addConfig(config)
         wloggerController.joinChannel(config.channel_name)
-        wedController.joinChannel(config.channel_name)
 
         return `Joined ${channel_name}`
     },

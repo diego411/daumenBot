@@ -23,14 +23,12 @@
       channel_name: "daumenbot"
     })
     await require('./controllers/wlogger').joinChannel("daumenbot")
-    await require('./controllers/wed').joinChannel("daumenbot")
     client.init(await database.getChannelNames())
   } else {
     channelNames.map(async channelName => {
       const wloggerController = require('./controllers/wlogger')
 
       await wloggerController.joinChannel(channelName)
-      await require('./controllers/wed').joinChannel(channelName)
 
       wloggerController.optOutUser("daumenbot")
     })
