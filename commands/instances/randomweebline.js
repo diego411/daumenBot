@@ -13,7 +13,7 @@ module.exports = {
             channel_name = channelName
         else channel_name = formatUser(raw_args[0])
 
-        if (!channel_name || !twitchController.getUserId(channel_name))
+        if (!channel_name || !(await twitchController.getUserId(channel_name)))
             return `Invalid channel provided`
 
         const stats = await wLoggerController.statsForChannel(channel_name)
