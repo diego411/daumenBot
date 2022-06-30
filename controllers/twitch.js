@@ -10,7 +10,7 @@ const HELIX_STREAMS_URL = "https://api.twitch.tv/helix/streams"
 const BANPHRASE_API_URL = "https://forsen.tv/api/v1/banphrases/test"
 const PB2_BANPHRASE_API_URL = "https://paj.pajbot.com/api/channel/22484632/moderation/check_message?message=";
 
-exports.getUserId = async (username) => {
+const getUserData = async (username) => {
     let response;
     try {
         response = await axios.get(`${HELIX_USERS_URL}?login=${username}`, {
@@ -19,11 +19,23 @@ exports.getUserId = async (username) => {
                 'Client-Id': CLIENT_ID
             }
         })
-        if (response.data.data.length > 0) return response.data.data[0].id
+        if (response.data.data.length > 0) return response.data.data[0]
     } catch (e) {
         logger.logAxiosError(e)
         return null
     }
+    return null
+}
+
+exports.getUserId = async (username) => {
+    const user_data = await getUserData(username)
+    if (user_data) return user_data.id
+    return null
+}
+
+exports.getProfilePicture = async (username) => {
+    const user_data = await getUserData(username)
+    if (user_data) return user_data.profile_image_url
     return null
 }
 

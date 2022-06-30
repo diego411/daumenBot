@@ -19,6 +19,22 @@ exports.weebCheck = async (channel, message) => {
     }
 }
 
+exports.weebCheckImageLink = async (image_link) => {
+    let response
+    try {
+        response = await axios({
+            method: 'get',
+            url: `${WED_BASE_URL}hwis`,
+            headers: { "Content-Type": "application/json" },
+            data: { image_link: image_link }
+        })
+        return response.data
+    } catch (e) {
+        logger.logAxiosError(e)
+        return null
+    }
+}
+
 exports.addWhitelistTerm = async (term) => {
     try {
         await axios({
