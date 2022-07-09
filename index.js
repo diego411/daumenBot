@@ -48,8 +48,8 @@
   });
 
   client.on("PRIVMSG", async (msg) => {
-    eventHandler.handle(msg)
-    commandHandler.handle(msg)
+    await eventHandler.handle(msg)
+    await commandHandler.handle(msg)
   })
 
 }())
